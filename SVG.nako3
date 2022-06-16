@@ -1,10 +1,25 @@
 #-----------------------------------------------
-＃ 【 SVG描画 】　0.12
-//破線パターン設定方法変更。破線描画削除。
-//描画初期設定の修正。
+＃ 【 SVG描画 】　0.13
+//・fillのデフォルト値は黒色だったのねん。
 #-----------------------------------------------
+＃定数宣言
+定数 無色＝「none」。
+定数 SVGデフォルト値一覧＝{
+    "stroke":無色,
+    "stroke-width":1,
+    "stroke-opacity":1,
+    "stroke-linecap":"butt",
+    "stroke-linejoin":"miter",
+    "stroke-dasharray":"none",
+    "stroke-dashoffset":0,
+    "fill":黒色,
+    "fill-opacity":1,
+    "font-family":空,
+    "font-weight":"normal",
+    "font-size":"medium",
+}
+
 ＃変数宣言
-変数 無色＝「none」
 変数 SVG要素作成個数＝0。
 変数 SVG描画設定情報＝{
   "線":{
@@ -13,7 +28,8 @@
     "stroke-opacity":1,
     "stroke-linecap":"butt",
     "stroke-linejoin":"miter",
-    "stroke-dasharray":"",
+    "stroke-dasharray":空,
+    "stroke-dashoffset":0,
   },
   "塗":{
     "fill":無色,
@@ -443,19 +459,6 @@ SVG和スタイル追加。
 # 　・優先順位によりクラスでの指定が効かなくなる。
 # 　・参照複製時にも継承されて上書きできない。
 # 　そうゆう用途の場合は、空またはデフォルト値にしておくことで設定しないようにする。
-定数 SVGデフォルト値一覧＝{
-    "stroke":無色,
-    "stroke-width":1,
-    "stroke-opacity":1,
-    "stroke-linecap":"butt",
-    "stroke-linejoin":"miter",
-    "stroke-dasharray":"",
-    "fill":無色,
-    "fill-opacity":1,
-    "font-family":空,
-    "font-weight":'normal',
-    "font-size":'medium',
-}
 ●(svgに設定を)SVG描画初期設定
     設定を反復
         属性＝対象キー。値＝対象。デフォルト値＝SVGデフォルト値一覧[属性]。
@@ -512,7 +515,7 @@ SVG和スタイル追加。
 ●(Aに|Aへ)SVG破線パターン設定
     もし、(Aの変数型確認)＝「object」でなければ、
         SVG線太さ＝SVG描画設定情報["線"]["stroke-width"]。
-        もし、A≠「丸点線」ならば、「端切」にSVG線端形状設定。
+        「端切」にSVG線端形状設定。
         Aで条件分岐
             「丸点線」ならば、
                 「丸」にSVG線端形状設定。
@@ -532,3 +535,4 @@ SVG和スタイル追加。
 　　SVG描画設定情報["線"]["stroke-dasharray"]＝A。
 ここまで。
 #-----------------------------------------------
+
