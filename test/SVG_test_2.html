@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="author" content="雪乃☆雫">
+  <meta name="keywords" content="なでしこ,なでしこv3,日本語プログラミング言語,なでしこさん">
+  <meta name="description" content="日本語プログラミング言語「なでしこ３」のプログラムのこと"> 
+<style>
+#nako3_canvas {
+  margin: 4px;
+  border: 1px dotted silver;
+}
+.nako3_div {
+  font-size: 1em;
+  line-height: 1.1em;
+}
+.nako3_div > button {
+  margin: 4px;
+  padding: 4px;
+  font-size: 0.9em;
+}
+.nako3_div input[type=checkbox] {
+  padding: 4px;
+  margin: 4px;
+}
+</style>
+  <title></title>
+</head>
+
+<body>
+
+<!-- なでしこの実行エンジン -->
+<script defer type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.3.52&f=release/wnako3.js&run"></script>
+
+<!-- なでしこのプログラム -->
+<script type="なでしこ">
+#---テスト用初期設定--------------------------
+プログラムタイトルは『パスの描画をするテスト』
+「title」にプログラムタイトルをテキスト設定。
+「#nako3_div」へDOM親要素設定。
+#-----------------------------------------------
+!『https://snowdrops89.github.io/SVG_nako3/SVG.nako3』を取り込む。
+
+＃SVG.nako3 v0.1.5のテスト2。
+＃パスの描画のテスト
+親SVG＝[300,300]のSVG親要素作成。
+黒色にSVG線色設定。１にSVG線太さ設定。
+「12px」にSVG文字サイズ設定。
+[10,20]に「二次ベジェ曲線」をSVG文字描画。
+[10,180]に「三次ベジェ曲線」をSVG文字描画。
+[180,240]に「スプライン」をSVG文字描画。
+
+＃二次ベジェ曲線
+無色にSVG塗り色設定。３にSVG線太さ設定。
+始点＝[10,120]。終点＝[[90,120],[170,120]]。制御点＝[50,30]
+始点から制御点で終点までSVG二次ベジェ曲線描画。
+
+//ポイントと補助線の描画
+1にSVG線太さ設定。灰色にSVG線色設定。
+赤色にSVG塗り色設定。
+始点に3のSVG円描画。
+終点を反復。対象に3のSVG円描画。。。
+黄色にSVG塗り色設定。
+制御点に3のSVG円描画。
+「点線」にSVG破線パターン設定。
+始点から制御点までSVG線描画。
+終点[0]から制御点までSVG線描画。
+
+＃ 三次ベジェ曲線
+無色にSVG塗り色設定。３にSVG線太さ設定。黒色にSVG線色設定。「直線」にSVG破線パターン設定。
+始点＝[10,290]。終点＝[90,290]。制御点＝[[20,190],[80,190]]
+始点から制御点で終点までSVG三次ベジェ曲線描画。
+
+//ポイントと補助線の描画
+1にSVG線太さ設定。灰色にSVG線色設定。
+赤色にSVG塗り色設定。
+始点に3のSVG円描画。終点に3のSVG円描画。
+黄色にSVG塗り色設定。
+制御点を反復。対象に3のSVG円描画。。。
+「点線」にSVG破線パターン設定。
+始点から制御点[0]までSVG線描画。
+終点から制御点[1]までSVG線描画。
+
+＃スプライン
+無色にSVG塗り色設定。３にSVG線太さ設定。黒色にSVG線色設定。「直線」にSVG破線パターン設定。
+始点＝[250,30]。
+中継点＝[[220,50],[270,100],[200,200],[280,280]]
+始点から中継点でSVGスプライン描画。
+
+//中継点の描画
+1にSVG線太さ設定。黄色にSVG塗り色設定。灰色にSVG線色設定。
+始点に3のSVG円描画。
+中継点を反復。対象に3のSVG円描画。。。
+#-----------------------------------------------------------------------
+</script>
+<div id='nako3_div' class='nako3_div'></div>
+<noscript>
+このプログラムは、日本語プログラミング言語「なでしこ３」で作成しています。<BR>
+Javascriptの動作する環境が必要です。Javascriptを有効にして下さい。<P>
+【対応ブラウザ】<BR>
+　・HTML5対応ブラウザ (Chrome /Safari /Edge /Firefox 等)<BR>
+　・スマホブラウザ (iOS Safari / Android標準ブラウザ)
+</noscript>
+</body>
+</html>

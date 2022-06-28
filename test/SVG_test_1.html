@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="author" content="雪乃☆雫">
+  <meta name="keywords" content="なでしこ,なでしこv3,日本語プログラミング言語,なでしこさん">
+  <meta name="description" content="日本語プログラミング言語「なでしこ３」のプログラムのこと"> 
+<style>
+#nako3_canvas {
+  margin: 4px;
+  border: 1px dotted silver;
+}
+.nako3_div {
+  font-size: 1em;
+  line-height: 1.1em;
+}
+.nako3_div > button {
+  margin: 4px;
+  padding: 4px;
+  font-size: 0.9em;
+}
+.nako3_div input[type=checkbox] {
+  padding: 4px;
+  margin: 4px;
+}
+</style>
+  <title></title>
+</head>
+
+<body>
+
+<!-- なでしこの実行エンジン -->
+<script defer type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.3.52&f=release/wnako3.js&run"></script>
+
+<!-- なでしこのプログラム -->
+<script type="なでしこ">
+#---テスト用初期設定--------------------------
+プログラムタイトルは『キャンバスと同じ描画をするテスト』
+「title」にプログラムタイトルをテキスト設定。
+「#nako3_div」へDOM親要素設定。
+「#nako3_canvas」へ描画開始。
+#-----------------------------------------------
+!『https://snowdrops89.github.io/SVG_nako3/SVG.nako3』を取り込む。
+!『https://n3s.nadesi.com/plain/1114.nako3』を取り込む。//キャンバスに破線・点線描くやつ
+!『https://snowdrops89.github.io/nako3_plugin/Plugin_draw.js』を取り込む。//キャンバスに扇形と角丸四角を描くやつ
+!『https://n3s.nadesi.com/plain/wa.nako3』を取り込む。//縦書き文字描画。
+
+＃SVG.nako3 v0.1.5のテスト１。
+＃キャンバスと同じ描画をして、コードを比較してみたりするテスト。
+親SVG＝[300,300]のSVG親要素作成。
+
+#canvas
+黒色に線色設定。１に線太さ設定。
+#SVG
+黒色にSVG線色設定。１にSVG線太さ設定。
+//SVGは描画後にも色やフォントは変えたい放題だけど一応同じ感じに出来るようにしてある。
+
+＃四角
+#canvas
+青色に塗り色設定。
+[10,10,100,80]の四角描画。
+#SVG
+青色にSVG塗り色設定。
+[10,10,100,80]のSVG四角描画。
+
+＃円
+#canvas
+赤色に塗り色設定。
+[100,100]へ50の円描画。
+#SVG
+赤色にSVG塗り色設定。
+[100,100]へ50のSVG円描画。
+
+＃多角形
+#canvas
+黄色に塗り色設定。
+[[150,10],[200,80],[100,80]]の多角形描画。
+#SVG
+黄色にSVG塗り色設定。
+[[150,10],[200,80],[100,80]]のSVG多角形描画。
+
+＃楕円
+//楕円はだいぶ違う。
+#canvas
+緑色に塗り色設定。
+[200,100,30,60,0,0,360をラジアン変換,いいえ]の楕円描画。
+#SVG
+緑色にSVG塗り色設定。
+[200,100]に[30,60]のSVG楕円描画。
+//SVGの楕円は傾きを設定出来ないっぽい。
+//トランスフォームで回転させるかパスを使う。
+
+＃画像
+画像URL＝「https://n3s.nadesi.com/image.php?f=8.jpg」
+#canvas
+[180,200,120,90]へ画像URLを画像描画。
+#SVG
+[180,200,120,90]へ画像URLをSVG画像描画。
+//SVGは幅と高さの指定が必須ラシイ。
+//部分的に描画するというのは無くて後からクリップパスで切り抜くっぽい。
+
+＃角丸四角
+#canvas（Plugin_draw.js）
+//rx,ryのいっこ省略で同じにする機能付けてなかった。
+水色に塗り色設定。
+[10,150,100,80]に[20,20]の角丸四角描画。
+#SVG
+水色にSVG塗り色設定。
+[10,150,100,80]に20のSVG角丸四角描画。
+
+＃扇描画
+#canvas（Plugin_draw.js）
+//こっちは逆にrx,ry両方の設定ができるようにしてない？
+紫色に塗り色設定。
+[100,240]に(225をラジアン変換)から(-45をラジアン変換)まで60の扇描画。
+#SVG
+紫色にSVG塗り色設定。
+[100,240]に(225をラジアン変換)から(-45をラジアン変換)まで60のSVG扇描画。
+
+＃円弧
+#canvas
+//円弧は楕円描画で。
+ベージュ色に塗り色設定。
+[100,240,60,60,0,90をラジアン変換,225をラジアン変換,0]に楕円描画。
+#SVG
+ベージュ色にSVG塗り色設定。
+[100,240]に90をラジアン変換から225をラジアン変換まで60のSVG円弧描画。
+
+＃文字
+//SVGはフォントまとめて設定するのないので文字の設定系は変えた。（全部バラでできる方が楽でよい）
+#canvas
+紫色に塗り色設定。「bold 28px serif」に描画フォント設定。
+[180,190]に「なでしこ」を文字描画。
+#SVG
+紫色にSVG塗り色設定。空にSVG線色設定。
+「bold」にSVG文字太設定。「28px」にSVG文字サイズ設定。「serif」にSVG文字フォント設定。
+[180,190]に「なでしこ」をSVG文字描画。
+//SVGはstrokeとfillを別々に描画しないので、文字も標準で線がついてくるので、線色をnoneにする。
+
+＃縦書き
+//描画される基準点が違うので注意する。
+#canvas（wa.nako3）
+黒色に塗り色設定。
+「bold 18px serif」に描画フォント設定。
+[160,190]に「なでしこ」を縦書文字描画。
+#SVG
+黒色にSVG塗り色設定。//空にSVG線色設定。「bold」にSVG文字太さ設定。
+「18px」にSVG文字サイズ設定。「serif」にSVG文字フォント設定。
+[160,190]に「なでしこ」をSVG縦書文字描画。
+
+＃線
+#canvas（1114.nako3）
+オリーブ色に線色設定。３に線太さ設定。
+[290,10]から[220,150]まで線描画。
+茶色に線色設定。「破線」に破線パターン設定。    //プラグイン必要。
+[220,10]から[290,150]まで線描画。
+#SVG
+オリーブ色にSVG線色設定。３にSVG線太さ設定。
+[290,10]から[220,150]までSVG線描画。
+茶色にSVG線色設定。「破線」にSVG破線パターン設定。
+[220,10]から[290,150]までSVG線描画。
+
+#-----------------------------------------------------------------------
+</script>
+<canvas id='nako3_canvas' width='300' height='300'></canvas>
+<div id='nako3_div' class='nako3_div'></div>
+<noscript>
+このプログラムは、日本語プログラミング言語「なでしこ３」で作成しています。<BR>
+Javascriptの動作する環境が必要です。Javascriptを有効にして下さい。<P>
+【対応ブラウザ】<BR>
+　・HTML5対応ブラウザ (Chrome /Safari /Edge /Firefox 等)<BR>
+　・スマホブラウザ (iOS Safari / Android標準ブラウザ)
+</noscript>
+</body>
+</html>
