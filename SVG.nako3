@@ -1,6 +1,6 @@
 #-----------------------------------------------
-＃ 【 SVG描画 】　0.3.0
-//・アニメーション
+＃ 【 SVG描画 】　0.3.1
+//・変形
 #-----------------------------------------------
 ＃定数宣言
 定数 無色＝「none」。
@@ -741,4 +741,59 @@ SVG和スタイル追加。
     ELを戻す。
 ここまで。
 #-----------------------------------------------
+#-----------------------------------------------
+＃変形
+#-----------------------------------------------
+#キャンバスのとは違い今あるSVGを変化させる。グループ(g)などに適用すれば、まとめて変化させられる。
+# transform(https://developer.mozilla.org/ja/docs/Web/SVG/Attribute/transform)
 
+●(svgをAだけ|Aに|Aへ)SVG描画変換マトリクス設定
+    svgの「transform」に「matrix({A[0]},{A[1]},{A[2]},{A[3]},{A[4]},{A[5]})」をSVG属性設定。
+ここまで。
+
+●(svgをAだけ|Aに|Aへ)SVG描画変換マトリクス追加
+    既存値＝svgの「transform」をSVG属性取得。
+    もし、既存値＝NULLならば、既存値＝空。
+    svgの「transform」に「{既存値} matrix({A[0]},{A[1]},{A[2]},{A[3]},{A[4]},{A[5]})」をSVG属性設定。
+ここまで。
+
+●(svgをXYだけ|XYに|XYへ)SVG描画移動　# Translate
+    既存値＝svgの「transform」をSVG属性取得。
+    もし、既存値＝NULLならば、既存値＝空。
+    X,Y＝XY。
+    もし、Y＝未定義ならば、Y=0。
+    svgの「transform」に「{既存値} translate({X},{Y})」をSVG属性設定。
+ここまで。
+
+●(svgをXYだけ|XYに|XYへ)SVG描画拡大　# Scale
+    既存値＝svgの「transform」をSVG属性取得。
+    もし、既存値＝NULLならば、既存値＝空。
+    X,Y＝XY。
+    もし、Y＝未定義ならば、Y=X。
+    svgの「transform」に「{既存値} scale({X},{Y})」をSVG属性設定。
+ここまで。
+
+●(svgをAだけ|Aに|Aへ)SVG描画回転　# Rotate
+    既存値＝svgの「transform」をSVG属性取得。
+    もし、既存値＝NULLならば、既存値＝空。
+    A,CX,CY=A。
+    もし、(CX≠未定義)かつ(CY≠未定義)ならば、A=「{A},{CX},{CY}」
+    svgの「transform」に「{既存値} rotate({A})」をSVG属性設定。
+ここまで。
+
+●(svgをAだけ|Aに|Aへ)SVG描画傾斜X　# SkewX
+    既存値＝svgの「transform」をSVG属性取得。
+    もし、既存値＝NULLならば、既存値＝空。
+    svgの「transform」に「{既存値} skewX({A})」をSVG属性設定。
+ここまで。
+
+●(svgをAだけ|Aに|Aへ)SVG描画傾斜Y　# SkewY
+    既存値＝svgの「transform」をSVG属性取得。
+    もし、既存値＝NULLならば、既存値＝空。
+    svgの「transform」に「{既存値} skewY({A})」をSVG属性設定。
+ここまで。
+
+●(svgの)SVG描画変形削除　# transform属性の内容を破棄。
+    svgの「transform」に空をSVG属性設定。
+ここまで。
+#-----------------------------------------------
