@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="author" content="雪乃☆雫">
+  <meta name="keywords" content="なでしこ,なでしこv3,日本語プログラミング言語,なでしこさん">
+  <meta name="description" content="日本語プログラミング言語「なでしこ３」のプログラムのこと"> 
+<style>
+#nako3_canvas {
+  margin: 4px;
+  border: 1px dotted silver;
+}
+.nako3_div {
+  font-size: 1em;
+  line-height: 1.1em;
+}
+.nako3_div > button {
+  margin: 4px;
+  padding: 4px;
+  font-size: 0.9em;
+}
+.nako3_div input[type=checkbox] {
+  padding: 4px;
+  margin: 4px;
+}
+</style>
+  <title></title>
+</head>
+
+<body>
+
+<!-- なでしこの実行エンジン -->
+<script defer type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.3.57&f=release/wnako3.js&run"></script>
+
+<!-- なでしこのプログラム -->
+<script type="なでしこ">
+#---テスト用初期設定--------------------------
+プログラムタイトルは『アニメーションのテスト』
+「title」にプログラムタイトルをテキスト設定。
+「#nako3_div」へDOM親要素設定。
+#-----------------------------------------------
+!『https://snowdrops89.github.io/SVG_nako3/SVG.nako3』を取り込む。
+母艦＝DOM親要素。
+
+#------------------------
+＃アニメーションテスト
+#------------------------
+＃アニメーション
+母艦へSVG描画開始。
+テスト１＝[300,50]のSVG親要素作成。
+黒色にSVG線色設定。３にSVG線太さ設定。黄色にSVG塗り色設定。
+円１＝[25,25]へ20のSVG円描画。
+円１の「cx」に「6s」と「50;250;50」でSVGアニメーション設定。
+
+＃変形アニメーション
+母艦へSVG描画開始。改行作成。
+テスト２＝[100,100]のSVG親要素作成。
+赤色にSVG塗り色設定。
+円２＝[25,25]へ20のSVG円描画。
+円２の「scale」に「6s」と「1 2; 2 1; 1 2」でSVG変形アニメーション設定。
+
+＃モーションアニメーション
+母艦へSVG描画開始。改行作成。
+テスト３＝[360,150]のSVG親要素作成。
+青色にSVG塗り色設定。
+円３＝[25,25]へ20のSVG円描画。
+無色にSVG塗り色設定。//無色にSVG線色設定。
+パス＝「M 10,40 c 0,-80 280,80 280,0 s -280,80 -280,0」のSVGパス描画。
+円３に「6s」と（パスの「d」をSVG属性取得）でSVGモーションアニメーション設定。
+//円３に「6s」と「M 10,40 c 0,-80 280,80 280,0 s -280,80 -280,0」でSVGモーションアニメーション設定。
+#-----------------------------------------------
+</script>
+<div id='nako3_div' class='nako3_div'></div>
+<noscript>
+このプログラムは、日本語プログラミング言語「なでしこ３」で作成しています。<BR>
+Javascriptの動作する環境が必要です。Javascriptを有効にして下さい。<P>
+【対応ブラウザ】<BR>
+　・HTML5対応ブラウザ (Chrome /Safari /Edge /Firefox 等)<BR>
+　・スマホブラウザ (iOS Safari / Android標準ブラウザ)
+</noscript>
+</body>
+</html>
