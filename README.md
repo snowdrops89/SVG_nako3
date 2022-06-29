@@ -10,3 +10,4 @@
 - [切り抜き、マスキング、タイルパターン、グラデーション](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_4.html)
 - [フィルター（画像ボカシ、ドロップシャドウ）](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_5.html)
 - [アニメーション、変形アニメーション、モーションアニメーション](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_6.html)
+- 変形
