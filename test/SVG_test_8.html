@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="author" content="雪乃☆雫">
+  <meta name="keywords" content="なでしこ,なでしこv3,日本語プログラミング言語,なでしこさん">
+  <meta name="description" content="日本語プログラミング言語「なでしこ３」のプログラムのこと"> 
+<style>
+#nako3_canvas {
+  margin: 4px;
+  border: 1px dotted silver;
+}
+.nako3_div {
+  font-size: 1em;
+  line-height: 1.1em;
+}
+.nako3_div > button {
+  margin: 4px;
+  padding: 4px;
+  font-size: 0.9em;
+}
+.nako3_div input[type=checkbox] {
+  padding: 4px;
+  margin: 4px;
+}
+</style>
+  <title></title>
+</head>
+
+<body>
+
+<!-- なでしこの実行エンジン -->
+<script defer type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.3.57&f=release/wnako3.js&run"></script>
+
+<!-- なでしこのプログラム -->
+<script type="なでしこ">
+#---テスト用初期設定--------------------------
+プログラムタイトルは『アニメーションのテスト』
+「title」にプログラムタイトルをテキスト設定。
+「#nako3_div」へDOM親要素設定。
+「#nako3_canvas」へ描画開始。
+#-----------------------------------------------
+!『https://snowdrops89.github.io/SVG_nako3/SVG.nako3』を取り込む。
+
+＃画像をハート型に切り抜いてダウンロードするテスト
+母艦＝DOM親要素。
+
+親SVG＝[400,300]のSVG親要素作成。//svg
+SVG定義領域作成して定義領域へ代入。//defs
+
+SVGクリップパス作成してハートクリップに代入。//clipPath
+ハートクリップでSVG描画開始。
+[0,0]からSVG連続パス描画開始。
+    [120,80]に-180をラジアン変換から0まで80のSVG円弧描画。
+    [260,80]に-180をラジアン変換から0まで80のSVG円弧描画。
+    [190,300]まで[340,200]でSVG二次ベジェ曲線描画。
+    [40,80]まで[40,200]でSVG二次ベジェ曲線描画。
+SVG連続パス描画終了。
+
+# リンクした画像をSVG画像描画したのをPNGでダウンロードするには、先にキャンバスに画像描画して描画データURL変換したのをSVG画像描画しなきゃダメみたいね。
+画像URL＝「https://n3s.nadesi.com/image.php?f=8.jpg」
+画像データ＝空。
+画像URLの画像読んだ時には、
+    描画中キャンバスの「幅」に「400」をDOM属性設定。
+    描画中キャンバスの「高さ」に「300」をDOM属性設定。
+    描画中キャンバスの「hidden」にオンをDOM属性設定。
+    対象の[0,0,640,480]を[0,0,400,300]に画像部分描画。
+    画像データ＝描画データURL変換。
+
+    親SVGへSVG描画開始。
+    撫子＝[0,0,400,300]へ画像データのSVG画像描画。//image
+    撫子をハートクリップでSVG画像切り抜き。
+ここまで。
+
+# ダウンロードボタン
+母艦にDOM親要素設定。
+改行作成。
+svgダウンロードボタン＝「svgダウンロード」のボタン作成。
+svgダウンロードボタンをクリックした時には、
+    「nadesiko.svg」で親SVGをSVGダウンロード。
+ここまで。
+pngダウンロードボタン＝「pngダウンロード」のボタン作成。
+pngダウンロードボタンをクリックした時には、
+    「nadesiko.png」で親SVGをPNGダウンロード。
+ここまで。
+#-----------------------------------------------
+</script>
+<canvas id='nako3_canvas' width='300' height='300'></canvas>
+<div id='nako3_div' class='nako3_div'></div>
+<noscript>
+このプログラムは、日本語プログラミング言語「なでしこ３」で作成しています。<BR>
+Javascriptの動作する環境が必要です。Javascriptを有効にして下さい。<P>
+【対応ブラウザ】<BR>
+　・HTML5対応ブラウザ (Chrome /Safari /Edge /Firefox 等)<BR>
+　・スマホブラウザ (iOS Safari / Android標準ブラウザ)
+</noscript>
+</body>
+</html>
