@@ -11,3 +11,7 @@
 - [フィルター（画像ボカシ、ドロップシャドウ）](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_5.html)
 - [アニメーション、変形アニメーション、モーションアニメーション](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_6.html)
 - [変形（傾斜、拡大、回転、移動）](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_7.html)
+
+## ダウンロード
+　svgとpngでダウンロード。
+- [画像をハート型に切り抜いてダウンロードするテスト](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_8.html)
