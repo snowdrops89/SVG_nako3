@@ -19,4 +19,4 @@
 ## ドラッグ＆ドロップ
 　てすとちゅう
 
-- [マウスで動かすテスト](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_9.html)
+- [マウスやタッチで動かすテスト](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_9.html)
