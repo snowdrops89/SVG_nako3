@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="author" content="雪乃☆雫">
+  <meta name="keywords" content="なでしこ,なでしこv3,日本語プログラミング言語,なでしこさん">
+  <meta name="description" content="日本語プログラミング言語「なでしこ３」のプログラムのこと"> 
+<style>
+#nako3_canvas {
+  margin: 4px;
+  border: 1px dotted silver;
+}
+.nako3_div {
+  font-size: 1em;
+  line-height: 1.1em;
+}
+.nako3_div > button {
+  margin: 4px;
+  padding: 4px;
+  font-size: 0.9em;
+}
+.nako3_div input[type=checkbox] {
+  padding: 4px;
+  margin: 4px;
+}
+</style>
+  <title></title>
+</head>
+
+<body>
+
+<!-- なでしこの実行エンジン -->
+<script defer type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.3.57&f=release/wnako3.js&run"></script>
+
+<!-- なでしこのプログラム -->
+<script type="なでしこ">
+#---テスト用初期設定--------------------------
+プログラムタイトルは『ドラッグ＆ドロップのテスト』
+「title」にプログラムタイトルをテキスト設定。
+「#nako3_div」へDOM親要素設定。
+#-----------------------------------------------
+!『https://snowdrops89.github.io/SVG_nako3/SVG.nako3』を取り込む。
+
+「マウスで❤を動かせます」のラベル作成。改行作成。
+母艦＝DOM親要素。
+親SVG＝[400,300]のSVG親要素作成。
+親SVGのSVGドラッグ許可。
+
+赤色にSVG塗り色設定。黒色にSVG線色設定。2にSVG線太さ設定。
+空にSVG連続パス描画開始。
+    [120,80]に-180をラジアン変換から0まで30のSVG円弧描画。
+    [180,80]に-180をラジアン変換から0まで30のSVG円弧描画。
+    [150,170]まで[210,130]でSVG二次ベジェ曲線描画。
+    [90,80]まで[90,130]でSVG二次ベジェ曲線描画。
+SVG連続パス描画終了。
+ハート＝それ。
+ハートのSVGドラッグオン。
+
+紫色にSVG塗り色設定。
+空にSVG連続パス描画開始。
+    [30,30]に-180をラジアン変換から0まで20のSVG円弧描画。
+    [70,30]に-180をラジアン変換から0まで20のSVG円弧描画。
+    [50,90]まで[90,60]でSVG二次ベジェ曲線描画。
+    [10,30]まで[10,60]でSVG二次ベジェ曲線描画。
+SVG連続パス描画終了。
+ハート２はそれ。
+ハート２のSVGドラッグオン。
+#-----------------------------------------------
+</script>
+<div id='nako3_div' class='nako3_div'></div>
+<noscript>
+このプログラムは、日本語プログラミング言語「なでしこ３」で作成しています。<BR>
+Javascriptの動作する環境が必要です。Javascriptを有効にして下さい。<P>
+【対応ブラウザ】<BR>
+　・HTML5対応ブラウザ (Chrome /Safari /Edge /Firefox 等)<BR>
+　・スマホブラウザ (iOS Safari / Android標準ブラウザ)
+</noscript>
+</body>
+</html>
