@@ -15,3 +15,8 @@
 ## ダウンロード
 　svgとpngでダウンロード。
 - [画像をハート型に切り抜いてダウンロードするテスト](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_8.html)
+
+## ドラッグ＆ドロップ
+　てすとちゅう
+
+- [マウスで動かすテスト](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_9.html)
