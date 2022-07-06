@@ -1,8 +1,10 @@
 #-----------------------------------------------
-＃ 【 SVG描画 】　0.4.1
-//・ドラッグ＆ドロップ
-//　タッチでできるように。
-//　対象イベント["changedTouches"][0]["pageX"]／["pageY"]だったのねん。
+＃ 【 SVG描画 】　0.4.2
+//　ドラッグ＆ドロップするとtranslateがどんどん追加されて、見た目上は良いがSVGファイルにした時大変なことになることに気付いたので、まとめれるように。
+//　変形の命令も、何度も重ねがけすると同様になるので、同様に修正。
+
+//・SVG変換マトリクス統合。
+//　「getCTM」で現在の変換マトリクスが取得出来る。
 #-----------------------------------------------
 ＃定数宣言
 定数 無色＝「none」。
@@ -760,6 +762,7 @@ SVG和スタイル追加。
     既存値＝svgの「transform」をSVG属性取得。
     もし、既存値＝NULLならば、既存値＝空。
     svgの「transform」に「{既存値} matrix({A[0]},{A[1]},{A[2]},{A[3]},{A[4]},{A[5]})」をSVG属性設定。
+    svgのSVG変換マトリクス統合。
 ここまで。
 
 ●(svgをXYだけ|XYに|XYへ)SVG描画移動　# Translate
@@ -768,6 +771,7 @@ SVG和スタイル追加。
     X,Y＝XY。
     もし、Y＝未定義ならば、Y=0。
     svgの「transform」に「{既存値} translate({X},{Y})」をSVG属性設定。
+    svgのSVG変換マトリクス統合。
 ここまで。
 
 ●(svgをXYだけ|XYに|XYへ)SVG描画拡大　# Scale
@@ -776,6 +780,7 @@ SVG和スタイル追加。
     X,Y＝XY。
     もし、Y＝未定義ならば、Y=X。
     svgの「transform」に「{既存値} scale({X},{Y})」をSVG属性設定。
+    svgのSVG変換マトリクス統合。
 ここまで。
 
 ●(svgをAだけ|Aに|Aへ)SVG描画回転　# Rotate
@@ -784,22 +789,31 @@ SVG和スタイル追加。
     A,CX,CY=A。
     もし、(CX≠未定義)かつ(CY≠未定義)ならば、A=「{A},{CX},{CY}」
     svgの「transform」に「{既存値} rotate({A})」をSVG属性設定。
+    svgのSVG変換マトリクス統合。
 ここまで。
 
 ●(svgをAだけ|Aに|Aへ)SVG描画傾斜X　# SkewX
     既存値＝svgの「transform」をSVG属性取得。
     もし、既存値＝NULLならば、既存値＝空。
     svgの「transform」に「{既存値} skewX({A})」をSVG属性設定。
+    svgのSVG変換マトリクス統合。
 ここまで。
 
 ●(svgをAだけ|Aに|Aへ)SVG描画傾斜Y　# SkewY
     既存値＝svgの「transform」をSVG属性取得。
     もし、既存値＝NULLならば、既存値＝空。
     svgの「transform」に「{既存値} skewY({A})」をSVG属性設定。
+    svgのSVG変換マトリクス統合。
 ここまで。
 
 ●(svgの)SVG描画変形削除　# transform属性の内容を破棄。
     svgの「transform」に空をSVG属性設定。
+ここまで。
+
+# Current Transformation Matrix
+●(svgの)SVG変換マトリクス統合
+    A=svgの「getCTM」を空でJSメソッド実行。
+    svgの「transform」に「matrix({A["a"]},{A["b"]},{A["c"]},{A["d"]},{A["e"]},{A["f"]})」をSVG属性設定。
 ここまで。
 
 # キャンバスのとは違い、描画先の原点を変更。
@@ -858,6 +872,7 @@ SVG和スタイル追加。
         今x＝対象イベント["pageX"]-SVGドラッグ情報["元x"]。
         今y＝対象イベント["pageY"]-SVGドラッグ情報["元y"]。
         SVGドラッグ情報["移動中要素"]の「transform」に「{SVGドラッグ情報["変形既存値"]} translate({今x},{今y})」をSVG属性設定。
+        SVGドラッグ情報["移動中要素"]のSVG変換マトリクス統合。
       ここまで。
     ここまで。
     DOMをタッチした時には、
@@ -865,6 +880,7 @@ SVG和スタイル追加。
         今x＝対象イベント["changedTouches"][0]["pageX"]-SVGドラッグ情報["元x"]。
         今y＝対象イベント["changedTouches"][0]["pageY"]-SVGドラッグ情報["元y"]。
         SVGドラッグ情報["移動中要素"]の「transform」に「{SVGドラッグ情報["変形既存値"]} translate({今x},{今y})」をSVG属性設定。
+        SVGドラッグ情報["移動中要素"]のSVG変換マトリクス統合。
       ここまで。
     ここまで。
     DOMをマウス離した時には、
