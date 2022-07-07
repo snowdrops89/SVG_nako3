@@ -21,3 +21,4 @@
 
 - [マウスやタッチで動かすテスト](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_9.html)
 - [ドラッグをオンオフしたり許可を変更したりするテスト](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_10.html)
+- [変形した要素をドラッグするテスト](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_11.html)
