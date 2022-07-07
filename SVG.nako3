@@ -895,7 +895,7 @@ SVG和スタイル追加。
     SVGドラッグ情報["移動中要素"]＝対象。
     SVGドラッグ情報["変形既存値"]＝SVGドラッグ情報["移動中要素"]の「transform」をSVG属性取得。
     もし、それ＝NULLならば、SVGドラッグ情報["変形既存値"]＝空。
-    もし、(対象イベント["changedTouches"]の存在)＝はいならば、
+    もし、対象イベントに「changedTouches」が辞書キー存在するならば、
         SVGドラッグ情報["元x"]＝対象イベント["changedTouches"][0]["pageX"]。
         SVGドラッグ情報["元y"]＝対象イベント["changedTouches"][0]["pageY"]。
     違えば、
@@ -906,7 +906,7 @@ SVG和スタイル追加。
 
 ●SVGドラッグ移動処理とは
     もし、SVGドラッグ情報["移動中フラグ"]＝オンならば、
-        もし、(対象イベント["changedTouches"]の存在)＝はいならば、
+        もし、対象イベントに「changedTouches」が辞書キー存在するならば、
             今x＝対象イベント["changedTouches"][0]["pageX"]-SVGドラッグ情報["元x"]。
             今y＝対象イベント["changedTouches"][0]["pageY"]-SVGドラッグ情報["元y"]。
         違えば、
