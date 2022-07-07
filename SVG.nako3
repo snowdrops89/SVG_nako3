@@ -1,6 +1,11 @@
 #-----------------------------------------------
-＃ 【 SVG描画 】　0.4.4
-//・SVG描画初期設定修正。
+＃ 【 SVG描画 】　0.4.5
+//・変形したやつもドラッグ移動できるように。
+//　移動を規定値の先に設定するだけで良かった。
+
+//・SVG描画起点設定とSVG描画移動の変更
+//　SVG描画起点設定はTranslateを普通に追加。
+//　SVG描画移動は先に入れることで見た目通りに移動させる。
 #-----------------------------------------------
 ＃定数宣言
 定数 無色＝「none」。
@@ -400,7 +405,7 @@ SVG和スタイル追加。
     EL＝「svg」のSVGエレメント作成。
     ELの「setAttribute」を['xmlns','http://www.w3.org/2000/svg']でJSメソッド実行。
     ELの「setAttribute」を['xmlns:xlink','http://www.w3.org/1999/xlink']でJSメソッド実行。
-    ELの「viewbox」に「0 0 {w} {h}」をSVG属性設定。
+    ELの「viewBox」に「0 0 {w} {h}」をSVG属性設定。
     ELの「width」にwをSVG属性設定。
     ELの「height」にhをSVG属性設定。
     DOM親要素へELをDOM子要素追加。
@@ -761,12 +766,23 @@ SVG和スタイル追加。
     svgのSVG変換マトリクス統合。
 ここまで。
 
-●(svgをXYだけ|XYに|XYへ)SVG描画移動　# Translate
+# Translateを普通に追加。キャンバスのと同様。名前も合わせる。
+●(svgをXYに|XYへ)SVG描画起点設定　# Translate
     既存値＝svgの「transform」をSVG属性取得。
     もし、既存値＝NULLならば、既存値＝空。
     X,Y＝XY。
     もし、Y＝未定義ならば、Y=0。
     svgの「transform」に「{既存値} translate({X},{Y})」をSVG属性設定。
+    svgのSVG変換マトリクス統合。
+ここまで。
+
+# Translateを追加ではなく先に行うことで変形してるやつも見た目通りに移動する。
+●(svgをXYだけ|XYに|XYへ)SVG描画移動　# Translate
+    既存値＝svgの「transform」をSVG属性取得。
+    もし、既存値＝NULLならば、既存値＝空。
+    X,Y＝XY。
+    もし、Y＝未定義ならば、Y=0。
+    svgの「transform」に「translate({X},{Y}) {既存値}」をSVG属性設定。
     svgのSVG変換マトリクス統合。
 ここまで。
 
@@ -806,19 +822,9 @@ SVG和スタイル追加。
     svgの「transform」に空をSVG属性設定。
 ここまで。
 
-# Current Transformation Matrix
-●(svgの)SVG変換マトリクス統合
+●(svgの)SVG変換マトリクス統合　# Current Transformation Matrix
     A=svgの「getCTM」を空でJSメソッド実行。
     svgの「transform」に「matrix({A["a"]},{A["b"]},{A["c"]},{A["d"]},{A["e"]},{A["f"]})」をSVG属性設定。
-ここまで。
-
-# キャンバスのとは違い、描画先の原点を変更。
-# 比率は変えずにviewBoxを移動させるだけ。
-●(親svgをXYに|XYへ)SVG描画起点設定
-    x,y＝XY。
-    w＝親svgの「width」をSVG属性取得。
-    h＝親svgの「height」をSVG属性取得。
-    親svgの「viewBox」に「{x*-1} {y*-1} {w} {h}」をSVG属性設定。
 ここまで。
 #-----------------------------------------------
 #-----------------------------------------------
@@ -913,7 +919,7 @@ SVG和スタイル追加。
             今x＝対象イベント["pageX"]-SVGドラッグ情報["元x"]。
             今y＝対象イベント["pageY"]-SVGドラッグ情報["元y"]。
         ここまで。
-        SVGドラッグ情報["移動中要素"]の「transform」に「{SVGドラッグ情報["変形既存値"]} translate({今x},{今y})」をSVG属性設定。
+        SVGドラッグ情報["移動中要素"]の「transform」に「translate({今x},{今y}) {SVGドラッグ情報["変形既存値"]}」をSVG属性設定。
         SVGドラッグ情報["移動中要素"]のSVG変換マトリクス統合。
     ここまで。
 ここまで。
@@ -923,3 +929,4 @@ SVG和スタイル追加。
     SVGドラッグ情報["移動中要素"]＝空。
 ここまで。
 #-----------------------------------------------
+
