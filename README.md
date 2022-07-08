@@ -17,8 +17,10 @@
 - [画像をハート型に切り抜いてダウンロードするテスト](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_8.html)
 
 ## ドラッグ＆ドロップ
-　てすとちゅう
-
+　マウスとタッチでは、ドラッグを許可した要素の範囲外に出たときの動作がちょっと違うっぽい。
 - [マウスやタッチで動かすテスト](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_9.html)
 - [ドラッグをオンオフしたり許可を変更したりするテスト](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_10.html)
 - [変形した要素をドラッグするテスト](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_11.html)
+
+## 重なり設定
+- [描画の重なり順を変更するテスト](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_12.html)
