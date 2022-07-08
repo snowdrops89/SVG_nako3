@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="author" content="雪乃☆雫">
+  <meta name="keywords" content="なでしこ,なでしこv3,日本語プログラミング言語,なでしこさん">
+  <meta name="description" content="日本語プログラミング言語「なでしこ３」のプログラムのこと"> 
+<style>
+#nako3_canvas {
+  margin: 4px;
+  border: 1px dotted silver;
+}
+.nako3_div {
+  font-size: 1em;
+  line-height: 1.1em;
+}
+.nako3_div > button {
+  margin: 4px;
+  padding: 4px;
+  font-size: 0.9em;
+}
+.nako3_div input[type=checkbox] {
+  padding: 4px;
+  margin: 4px;
+}
+</style>
+  <title>なでしこさん</title>
+</head>
+
+<body>
+
+<!-- なでしこの実行エンジン -->
+<script defer type="text/javascript" src="https://nadesi.com/v3/cdn.php?v=3.3.60&f=release/wnako3.js&run"></script>
+
+<!-- なでしこのプログラム -->
+<script type="なでしこ">
+#---テスト用初期設定--------------------------
+プログラムタイトルは『重なりを変更するテスト』
+「title」にプログラムタイトルをテキスト設定。
+「#nako3_div」へDOM親要素設定。
+#-----------------------------------------------
+!『https://snowdrops89.github.io/SVG_nako3/SVG.nako3』を取り込む。
+
+母艦＝DOM親要素。
+黒色にSVG線色設定。
+「黄色の四角の重なりを変更します」のラベル作成。改行作成。
+
+親svg＝[100,100]のSVG親要素作成。
+親svgをSVGドラッグ許可
+
+青色にSVG塗り色設定。
+青四角＝[0,0,80,80]へSVG四角描画。
+青四角のSVGドラッグオン。
+
+黄色にSVG塗り色設定。
+黄四角＝[10,10,80,80]へSVG四角描画。
+黄四角のSVGドラッグオン。
+
+赤色にSVG塗り色設定。
+赤四角＝[20,20,80,80]にSVG四角描画。
+赤四角のSVGドラッグオン。
+
+母艦にDOM親要素設定。改行作成。
+最前面ボタン＝「最前面」のボタン作成。
+前面ボタン＝「前面」のボタン作成。
+背面ボタン＝「背面」のボタン作成。
+最背面ボタン＝「最背面」のボタン作成。
+
+
+最前面ボタンをクリックした時には、
+    黄四角をSVG最前面。
+ここまで。
+
+最背面ボタンをクリックした時には、
+    黄四角をSVG最背面。
+ここまで。
+
+前面ボタンをクリックした時には、
+    次要素＝黄四角のDOM次要素取得。
+    黄四角を次要素のSVG前面。
+ここまで。
+
+背面ボタンをクリックした時には、
+    前要素＝黄四角のDOM前要素取得。
+    黄四角を前要素のSVG背面。
+ここまで。
+#-----------------------------------------------
+</script>
+<div id='nako3_div' class='nako3_div'></div>
+<noscript>
+このプログラムは、日本語プログラミング言語「なでしこ３」で作成しています。<BR>
+Javascriptの動作する環境が必要です。Javascriptを有効にして下さい。<P>
+【対応ブラウザ】<BR>
+　・HTML5対応ブラウザ (Chrome /Safari /Edge /Firefox 等)<BR>
+　・スマホブラウザ (iOS Safari / Android標準ブラウザ)
+</noscript>
+</body>
+</html>
