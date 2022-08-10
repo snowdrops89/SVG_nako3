@@ -8,9 +8,11 @@
 
 ## 画像に効果を付ける
 - [切り抜き、マスキング、タイルパターン、グラデーション](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_4.html)
-- [フィルター（画像ボカシ、ドロップシャドウ）](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_5.html)
 - [アニメーション、変形アニメーション、モーションアニメーション](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_6.html)
 - [変形（傾斜、拡大、回転、移動）](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_7.html)
+### フィルター
+- [画像ボカシ、ドロップシャドウ、重ねがけ](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_5.html)
+- [グレイスケール、セピア、ネガポジ、ガンマ補正、コントラスト、明度、彩度、色相](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_13.html)
 
 ## ダウンロード
 　svgとpngでダウンロード。
