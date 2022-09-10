@@ -1,8 +1,7 @@
 #-----------------------------------------------
-＃ 【 SVG描画 】　0.6.2
-//・フィルターいろいろ強化中
-//・コントラスト、明度、彩度、色相
-//（しかし、よく考えたらCSSのフィルターが使えるから画像処理系のフィルターは別にいらないかも；）
+＃ 【 SVG描画 】　0.6.3
+//・画像モザイク、画像シャープ、パーリンノイズ
+//・その他基本フィルター（主に画像モザイクよう）
 #-----------------------------------------------
 ＃定数宣言
 定数 無色＝「none」。
@@ -677,8 +676,41 @@ SVG和スタイル追加。
     reを戻す。
 ここまで。
 
-＃＃＃実際のフィルター
+＃＃＃画像処理フィルター
 //（ファイルを分けるかも）
+●(フィルターにてsvgに強度の|svgへ)SVG画像ボカシ　# feGaussianBlur
+    EL＝「feGaussianBlur」のSVGエレメント作成。
+    ELの「stdDeviation」に強度をSVG属性設定。
+    フィルターにてsvgにELをSVG描画フィルター設定。
+ここまで。
+
+# 強度は（1〜20）。
+●(フィルターにてsvgに強度の|svgへ)SVG画像シャープ
+    EL＝「feConvolveMatrix」のSVGエレメント作成。
+    ELに{「order」: 7,「targetX」: 3,「targetY」: 3,
+      「kernelMatrix」:「0 0 0 -3 0 0 0 0 0 0 -2 0 0 0 0 0 0 -1 0 0 0 -3 -2 -1 {45-強度} -1 -2 -3 0 0 0 -1 0 0 0 0 0 0 -2 0 0 0 0 0 0 -3 0 0 0」}をSVG属性一括設定。
+    フィルターにてsvgにELをSVG描画フィルター設定。
+ここまで。
+
+#ピクセルは偶数にしたほうがいいです。
+●(フィルターにてsvgにピクセルで|svgへ)SVG画像モザイク
+    # ドットの作成
+    先頭ID＝フィルターにてsvgを黒色でSVG画像塗り潰し。
+    それのDOM要素ID取得して{「x」: ピクセル/2,「y」:ピクセル/2,「幅」:1,「高さ」:1}をSVG属性一括設定。
+    ドット＝フィルターにてsvgを[0,0]にSVG画像ズラし。
+    それのDOM要素ID取得して{「x」: 0,「y」:0,「幅」:ピクセル,「高さ」:ピクセル}をSVG属性一括設定。
+    ドットs＝フィルターにてsvgにドットをSVG画像敷き詰め。
+    # 元画像を合成
+    in=「SourceGraphic」
+    前要素＝先頭IDのDOM要素ID取得して、それのDOM前要素取得。
+    もし、前要素＝NULLでなければ、in＝前要素の「id」をSVG属性取得。
+    in2＝フィルターにてsvgを白色でSVG画像塗り潰し。
+    in＝フィルターにてsvgにinとin2を「atop」でSVG画像合成。
+    # ドットをピクセルに拡張
+    フィルターにてsvgにinとドットsを「in」でSVG画像合成。
+    フィルターにてsvgをピクセル/2でSVG画像膨張。
+ここまで。
+
 ●(フィルターにてsvgを)SVG画像グレイスケール
     EL＝「feColorMatrix」のSVGエレメント作成。
     ELの「type」に「matrix」をSVG属性設定。
@@ -785,12 +817,20 @@ SVG和スタイル追加。
     フィルターにてsvgにELをSVG描画フィルター設定。
 ここまで。
 
-●(フィルターにてsvgに強度の|svgへ)SVG画像ボカシ
-    EL＝「feGaussianBlur」のSVGエレメント作成。
-    ELの「stdDeviation」に強度をSVG属性設定。
-    フィルターにてsvgにELをSVG描画フィルター設定。
+＃＃＃＃画像セピアで使用
+●(色を|色の)RGB分解
+　分色とは変数。分色＝空配列。
+　色＝色の「#」を「0x」に置換。
+　色＝色を整数変換。
+　数を２から０まで繰り返す
+　　分色[数]＝色%256。
+　　色＝(色-分色[数])/256
+　ここまで。
+　分色で戻る。
 ここまで。
 
+＃＃＃ドロップシャドウ
+# 陰色は塗り色と塗り透明度を使用
 ●(フィルターにてsvgに位置と|svgへ位置で強度の)SVGドロップシャドウ
     EL＝「feDropShadow」のSVGエレメント作成。
     dx,dy＝位置。
@@ -803,17 +843,90 @@ SVG和スタイル追加。
     フィルターにてsvgにELをSVG描画フィルター設定。
 ここまで。
 
-＃＃＃画像セピアで使用
-●(色を|色の)RGB分解
-　分色とは変数。分色＝空配列。
-　色＝色の「#」を「0x」に置換。
-　色＝色を整数変換。
-　数を２から０まで繰り返す
-　　分色[数]＝色%256。
-　　色＝(色-分色[数])/256
-　ここまで。
-　分色で戻る。
+＃＃＃基本フィルター
+# 透明度は塗り透明度を使用。
+●(フィルターにてsvgを色で)SVG画像塗り潰し　# feFlood
+    EL＝「feFlood」のSVGエレメント作成。
+    ELの「flood-color」に色をSVG属性設定。
+    もし、色＝空ならば、ELの「flood-color」にSVG描画設定情報["塗"]["fill"]をSVG属性設定。
+    ELの「flood-opacity」にSVG描画設定情報["塗"]["fill-opacity"]をSVG属性設定。
+    フィルターにてsvgにELをSVG描画フィルター設定。
 ここまで。
+
+●(フィルターにてsvgを位置に)SVG画像ズラし　# feOffset
+    dx,dy＝位置。
+    EL＝「feOffset」のSVGエレメント作成。
+    ELの「dx」にdxをSVG属性設定。
+    ELの「dy」にdyをSVG属性設定。
+    フィルターにてsvgにELをSVG描画フィルター設定。
+ここまで。
+
+●(フィルターにてsvgにAを)SVG画像敷き詰め　# feTile
+    EL＝「feTile」のSVGエレメント作成。
+    ELの「in」にAをSVG属性設定。
+    フィルターにてsvgにELをSVG描画フィルター設定。
+ここまで。
+
+＃＃＃画像を合成
+# PorterDuff合成
+/*
+・over……inの画像優先。
+・in……inとin2の共通部分。
+・out……in2の部分をくり抜く。
+・atop……in2の領域にinの画像を重ねる。
+・xor……共通部分をくり抜く。
+・arithmetic……2つの画像の共通部分に応じた合成演算を行う。
+*/
+●(フィルターにてsvgにAとBをoperatorで)SVG画像合成　# feComposite
+    EL＝「feComposite」のSVGエレメント作成。
+    ELの「in」にAをSVG属性設定。
+    ELの「in2」にBをSVG属性設定。
+    ELの「operator」にoperatorをSVG属性設定。
+    フィルターにてsvgにELをSVG描画フィルター設定。
+ここまで。
+
+＃＃＃画像の侵食・膨張
+# 暗い/値の小さい所が広がる
+# radiusは処理の半径。
+●(フィルターにてsvgをradiusで)SVG画像浸食
+    EL＝「feMorphology」のSVGエレメント作成。
+    ELの「operator」に「erode」をSVG属性設定。
+    ELの「radius」にradiusをSVG属性設定。
+    フィルターにてsvgにELをSVG描画フィルター設定。
+ここまで。
+
+# 明るい/値の大きい所が広がる
+●(フィルターにてsvgをradiusで)SVG画像膨張
+    EL＝「feMorphology」のSVGエレメント作成。
+    ELの「operator」に「dilate」をSVG属性設定。
+    ELの「radius」にradiusをSVG属性設定。
+    フィルターにてsvgにELをSVG描画フィルター設定。
+ここまで。
+
+＃＃＃パーリンノイズ
+/*
+強度は[baseFrequency,numOctaves]の配列。
+・baseFrequency……ノイズ関数の周波数(x y)。大きくなるほど細かくなる。1より小さい値を指定。
+・numOctaves……ノイズ関数に対するオクターブ。大きくなるほどより複雑になる。1以上の整数を指定。
+*/
+●(フィルターにてsvgに強度の|強度へ)SVG乱気流
+    EL＝「feTurbulence」のSVGエレメント作成。
+    ELの「type」に「turbulence」をSVG属性設定。
+    ELの「stitchTiles」に「stitch」をSVG属性設定。# 継ぎ目をつなぐ。「noStitch」にするとつながない。
+    ELの「baseFrequency」に強度[0]をSVG属性設定。
+    ELの「numOctaves」に強度[1]をSVG属性設定。
+    フィルターにてsvgにELをSVG描画フィルター設定。
+ここまで。
+
+●(フィルターにてsvgに強度の|強度へ)SVGフラクタルノイズ
+    EL＝「feTurbulence」のSVGエレメント作成。
+    ELの「type」に「fractalNoise」をSVG属性設定。
+    ELの「stitchTiles」に「stitch」をSVG属性設定。
+    ELの「baseFrequency」に強度[0]をSVG属性設定。
+    ELの「numOctaves」に強度[1]をSVG属性設定。
+    フィルターにてsvgにELをSVG描画フィルター設定。
+ここまで。
+
 #-----------------------------------------------
 #-----------------------------------------------
 ＃アニメーション
