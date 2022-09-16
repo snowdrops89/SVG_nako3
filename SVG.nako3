@@ -749,7 +749,7 @@ SVG和スタイル追加。
 ●(フィルターにてsvgをAで)SVG画像モノクロ　# 二値化
     EL＝「feColorMatrix」のSVGエレメント作成。
     ELに{「type」:「saturate」,「values」:0}をSVG属性一括設定。
-    フィルターにてsvgにELをSVGフィルター直接設定。
+    フィルターにてsvgにELをSVG描画フィルター設定。
     EL＝「feComponentTransfer」のSVGエレメント作成。
     re＝フィルターにてsvgにELをSVG描画フィルター設定。
     V＝A。
