@@ -13,6 +13,7 @@
 ### フィルター
 - [画像ボカシ、ドロップシャドウ、重ねがけ](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_5.html)
 - [グレイスケール、セピア、ネガポジ、ガンマ補正、ボカシ、シャープ、モザイク、コントラスト、明度、彩度、色相](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_13.html)
+- [画像を合成するフィルタ。画像合成(PorterDuff合成)、画像ブレンド、画像マージ](https://snowdrops89.github.io/SVG_nako3/test/SVG_test_14.html)
 
 ## ダウンロード
 　svgとpngでダウンロード。
