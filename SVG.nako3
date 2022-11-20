@@ -1,14 +1,7 @@
 #-----------------------------------------------
-＃ 【 SVG描画 】　0.7.2
-//・フィルタ追加。
-//　色行列変換、色成分変換。行列畳み込み。変位マップ。
-//・画像処理フィルタ
-//　画像ノイズ。
-//　線画。エッジ。輪郭抽出。エンボス。//エッジ関係。
-//　明度抽出。//ColorMatrixのtypeはそれぞれ独立した命令にする。
-//　縁取り。//画像膨張のお試し
-//　粒子拡散。//変位マップのお試し
-※あとは照明のフィルタ
+＃ 【 SVG描画 】　0.7.3
+
+※あとは照明のフィルタくらい
 
 ※　制作時のナデシコバージョン:3.3.74（blob作成を使っているのでv3.3.67以上必要）
 #-----------------------------------------------
@@ -180,8 +173,7 @@ SVG和スタイル追加。
 ●(xyへSの|xyにSを)SVG文字描画
     変数 [x,y]＝xy。
     EL＝「text」のSVGエレメント作成。
-    ELの「x」にxをSVG属性設定。
-    ELの「y」にyをSVG属性設定。
+    ELに{「x」:x,「y」:y}をSVG属性一括設定。
     ELにSVG描画設定情報["線"]をSVG描画初期設定。
     ELにSVG描画設定情報["塗"]をSVG描画初期設定。
     ELにSVG描画設定情報["文字"]をSVG描画初期設定。
@@ -193,13 +185,12 @@ SVG和スタイル追加。
 ●(xyへSの|xyにSを)SVG縦書き文字描画
     変数 [x,y]＝xy。
     EL＝「text」のSVGエレメント作成。
-    ELの「x」にxをSVG属性設定。
-    ELの「y」にyをSVG属性設定。
+    ELに{「x」:x,「y」:y,
+         「writing-mode」:「vertical-rl」,
+         「text-orientation」:「mixed」}をSVG属性一括設定。
     ELにSVG描画設定情報["線"]をSVG描画初期設定。
     ELにSVG描画設定情報["塗"]をSVG描画初期設定。
     ELにSVG描画設定情報["文字"]をSVG描画初期設定。
-    ELの「writing-mode」に「vertical-rl」をSVG属性設定。
-    ELの「text-orientation」に「mixed」をSVG属性設定。
     DOM親要素へELをDOM子要素追加。
     ELにSをテキスト設定。
     ELを戻す。
@@ -1080,6 +1071,9 @@ mode
     違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
 ここまで。
 
+＃＃＃照明効果と光源
+
+
 #-----------------------------------------------
 #-----------------------------------------------
 ＃アニメーション
@@ -1197,34 +1191,43 @@ mode
 ●(ファイル名でsvgを)SVGダウンロード
     もし、ファイル名＝空ならば、ファイル名＝「nako3_SVG.svg」
     SVGテキスト＝svg["outerHTML"]。
-    blob＝SVGテキストを{"type":"application/xml"}でBLOB作成。
-    blobURL＝「URL.createObjectURL」を[blob]でJS関数実行。
-    A＝「a」のDOM部品作成。//仮のaタグ。
+    BLOB＝SVGテキストを{"type":"application/xml"}でBLOB作成。
+    URL＝「URL.createObjectURL」を[BLOB]でJS関数実行。
+    A＝「a」のDOM部品作成。# 仮のaタグ。
     Aの「download」にファイル名をDOM属性設定。
-    Aの「href」にblobURLをDOM属性設定。
+    Aの「href」にURLをDOM属性設定。
     Aの「click」を空でJSメソッド実行。
-    DOM親要素からAをDOM子要素削除。//消して終了。
+    DOM親要素からAをDOM子要素削除。# 消して終了。
+    「window.URL.revokeObjectURL」を[URL]でJS関数実行。# 解放して終了。
 ここまで。
 
-●(ファイル名でsvgを)PNGダウンロード
+●(svgをファイル名で|ファイル名へ|ファイル名に)PNGダウンロード
     もし、ファイル名＝空ならば、ファイル名＝「nako3_SVG.png」
-    XMLS＝「new XMLSerializer();」をJS実行。
-    SVGデータ＝XMLSの「serializeToString」をsvgでJSメソッド実行。
-    IMGデータ＝「"data:image/svg+xml;charset=utf-8;base64,"+btoa(unescape(encodeURIComponent('{SVGデータ}')))」をJS実行。
+    SVGテキスト＝svg["outerHTML"]。
+    IMGデータ＝「"data:image/svg+xml;charset=utf-8;base64,"+btoa(unescape(encodeURIComponent('{SVGテキスト}')))」をJS実行。
     w＝svgの「width」をSVG属性取得。
     h＝svgの「height」をSVG属性取得。
-    [w,h]のキャンバス作成して描画開始。//仮のキャンバス
-    A＝「a」のDOM部品作成。//仮のaタグ
+    [w,h]のキャンバス作成して描画開始。# 仮のキャンバス
+    A＝「a」のDOM部品作成。# 仮のaタグ
     Aの「ファイル名」にファイル名をDOM属性設定。
     IMGデータの画像読んだ時には、
-      [0,0]に対象を画像描画。//SVGのデータスキームを仮のキャンバスに描画。
+      [0,0]に対象を画像描画。# SVGのデータスキームを仮のキャンバスに描画。
       A=「nadesi-dom-{DOM部品個数-1}」のDOM要素ID取得。
       ファイル名＝Aの「ファイル名」をDOM属性取得。
       Aに描画ダウンロードリンク作成。
       Aの「download」にファイル名をDOM属性設定。
       Aの「click」を空でJSメソッド実行。
-      DOM親要素からAをDOM子要素削除。//全部消して終了。
+      DOM親要素からAをDOM子要素削除。# 全部消して終了。
       DOM親要素から描画中キャンバスをDOM子要素削除。
+    ここまで。
+ここまで。
+
+# 描画中キャンバスの[0,0]へ描画する
+●(svgを)SVGキャンバス描画
+    SVGテキスト＝svg["outerHTML"]。
+    IMGデータ＝「"data:image/svg+xml;charset=utf-8;base64,"+btoa(unescape(encodeURIComponent('{SVGテキスト}')))」をJS実行。
+    IMGデータの画像読んだ時には、
+        [0,0]に対象を画像描画。
     ここまで。
 ここまで。
 #-----------------------------------------------
@@ -1296,7 +1299,7 @@ mode
 #-----------------------------------------------
 ＃重なり設定
 #-----------------------------------------------
-# 記述した順に重なっていくので、最後に追加すると最前面になり、最初に挿入すると再背面となる。
+# 記述した順に重なっていくので、最後に追加すると最前面になり、最初に挿入すると最背面となる。
 ●(svgを)SVG最前面
     親＝svgのDOM親要素取得。
     svgを親にDOM子要素追加。
