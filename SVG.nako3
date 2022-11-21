@@ -1,9 +1,7 @@
 #-----------------------------------------------
-＃ 【 SVG描画 】　0.7.3
+＃ 【 SVG描画 】　0.7.4
 
-//ダウンロード関係修正
-//・SVGキャンバス描画
-※あとは照明のフィルタくらい
+//・transformの修正（getCTMで統合するのやめる）
 
 ※　制作時のナデシコバージョン:3.3.74（blob作成を使っているのでv3.3.67以上必要）
 #-----------------------------------------------
@@ -1123,7 +1121,6 @@ mode
     既存値＝svgの「transform」をSVG属性取得。
     もし、既存値＝NULLならば、既存値＝空。
     svgの「transform」に「{既存値} matrix({A[0]},{A[1]},{A[2]},{A[3]},{A[4]},{A[5]})」をSVG属性設定。
-    svgのSVG変換マトリクス統合。
 ここまで。
 
 # Translateを普通に追加。キャンバスのと同様。名前も合わせる。
@@ -1133,7 +1130,6 @@ mode
     X,Y＝XY。
     もし、Y＝未定義ならば、Y=0。
     svgの「transform」に「{既存値} translate({X},{Y})」をSVG属性設定。
-    svgのSVG変換マトリクス統合。
 ここまで。
 
 # Translateを追加ではなく先に行うことで変形してるやつも見た目通りに移動する。
@@ -1143,7 +1139,6 @@ mode
     X,Y＝XY。
     もし、Y＝未定義ならば、Y=0。
     svgの「transform」に「translate({X},{Y}) {既存値}」をSVG属性設定。
-    svgのSVG変換マトリクス統合。
 ここまで。
 
 ●(svgをXYだけ|XYに|XYへ)SVG描画拡大　# Scale
@@ -1152,7 +1147,6 @@ mode
     X,Y＝XY。
     もし、Y＝未定義ならば、Y=X。
     svgの「transform」に「{既存値} scale({X},{Y})」をSVG属性設定。
-    svgのSVG変換マトリクス統合。
 ここまで。
 
 ●(svgをAだけ|Aに|Aへ)SVG描画回転　# Rotate
@@ -1161,30 +1155,27 @@ mode
     A,CX,CY=A。
     もし、(CX≠未定義)かつ(CY≠未定義)ならば、A=「{A},{CX},{CY}」
     svgの「transform」に「{既存値} rotate({A})」をSVG属性設定。
-    svgのSVG変換マトリクス統合。
 ここまで。
 
 ●(svgをAだけ|Aに|Aへ)SVG描画傾斜X　# SkewX
     既存値＝svgの「transform」をSVG属性取得。
     もし、既存値＝NULLならば、既存値＝空。
     svgの「transform」に「{既存値} skewX({A})」をSVG属性設定。
-    svgのSVG変換マトリクス統合。
 ここまで。
 
 ●(svgをAだけ|Aに|Aへ)SVG描画傾斜Y　# SkewY
     既存値＝svgの「transform」をSVG属性取得。
     もし、既存値＝NULLならば、既存値＝空。
     svgの「transform」に「{既存値} skewY({A})」をSVG属性設定。
-    svgのSVG変換マトリクス統合。
 ここまで。
 
 ●(svgの)SVG描画変形削除　# transform属性の内容を破棄。
     svgの「transform」に空をSVG属性設定。
 ここまで。
 
-●(svgの)SVG変換マトリクス統合　# Current Transformation Matrix
-    A=svgの「getCTM」を空でJSメソッド実行。
-    svgの「transform」に「matrix({A["a"]},{A["b"]},{A["c"]},{A["d"]},{A["e"]},{A["f"]})」をSVG属性設定。
+●(svgの)CTM取得　# Current Transformation Matrix
+    CTM=svgの「getCTM」を空でJSメソッド実行。
+    「matrix({CTM["a"]},{CTM["b"]},{CTM["c"]},{CTM["d"]},{CTM["e"]},{CTM["f"]})」を戻す。
 ここまで。
 #-----------------------------------------------
 #-----------------------------------------------
@@ -1289,7 +1280,6 @@ mode
             今y＝対象イベント["pageY"]-SVGドラッグ情報["元y"]。
         ここまで。
         SVGドラッグ情報["移動中要素"]の「transform」に「translate({今x},{今y}) {SVGドラッグ情報["変形既存値"]}」をSVG属性設定。
-        SVGドラッグ情報["移動中要素"]のSVG変換マトリクス統合。
     ここまで。
 ここまで。
 
