@@ -2,6 +2,7 @@
 ＃ 【 SVG描画 】　0.7.4
 
 //・transformの修正（getCTMで統合するのやめる）
+//・描画移動と、描画起点移動。
 
 ※　制作時のナデシコバージョン:3.3.74（blob作成を使っているのでv3.3.67以上必要）
 #-----------------------------------------------
@@ -1124,13 +1125,22 @@ mode
     svgのSVG変換マトリクス統合。
 ここまで。
 
-# Translateを追加ではなく先に行うことで変形してるやつも見た目通りに移動する。
-●(svgをXYだけ|XYに|XYへ)SVG描画移動　# Translate
+# Translateを追加ではなく先頭で行うことで変形してるやつも見た目通りに移動する。
+●(svgをXYだけ|XYに|XYへ)SVG描画起点移動　# Translate
     既存値＝svgの「transform」をSVG属性取得。
     もし、既存値＝NULLならば、既存値＝空。
     X,Y＝XY。
     もし、Y＝未定義ならば、Y=0。
     svgの「transform」に「translate({X},{Y}) {既存値}」をSVG属性設定。
+    svgのSVG変換マトリクス統合。
+ここまで。
+
+●(svgをXYだけ|XYに|XYへ)SVG描画移動　# Translate
+    既存値＝svgの「transform」をSVG属性取得。
+    もし、既存値＝NULLならば、既存値＝空。
+    X,Y＝XY。
+    もし、Y＝未定義ならば、Y=0。
+    svgの「transform」に「{既存値} translate({X},{Y})」をSVG属性設定。
     svgのSVG変換マトリクス統合。
 ここまで。
 
