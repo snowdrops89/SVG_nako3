@@ -457,12 +457,8 @@ SVG和スタイル追加。
 # use(https://developer.mozilla.org/ja/docs/Web/SVG/Element/use)
 ●(svgを)SVG参照複製
     ID＝svgの「id」をSVG属性取得。
-    幅＝svgの「幅」をSVG属性取得。
-    高＝svgの「高」をSVG属性取得。
     EL＝「use」のSVGエレメント作成。
     ELの「href」に「#{ID}」をSVG属性設定。
-    ELの「幅」に幅をSVG属性設定。
-    ELの「高」に高をSVG属性設定。
     DOM親要素へELをDOM子要素追加。
     ELを戻す。
 ここまで。
