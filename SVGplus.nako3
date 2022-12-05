@@ -1,0 +1,835 @@
+/*-----------------------------------------------
+＃ 【 SVG描画 ＋】　0.9.0
+
+・画像切り抜き、マスキング、グラデーション、タイルパターン、アニメーション、フィルター。
+・ダウンロード、ドラッグ＆ドロップ、重なり設定。
+
+※　追加機能なので本体(SVG.nako)も一緒に取り込む。
+※　制作時のナデシコバージョン:3.3.81（blob作成を使っているのでv3.3.67以上必要）
+#-----------------------------------------------*/
+#-----------------------------------------------
+＃効果
+#-----------------------------------------------
+＃＃画像切り抜き
+# クリッピングパスを定義して置く所。この中に描画したものは表示されず、画像切り抜きで設定して使う。
+# 基本、定義領域(defs)に作成する。
+●(定義領域へ|定義領域に)SVGクリップパス作成
+    もし、定義領域＝空ならば、定義領域＝DOM親要素。
+    EL＝「clipPath」のSVGエレメント作成。
+    定義領域へELをDOM子要素追加。
+    ELを戻す。
+ここまで。
+
+●(svgをクリップパスで)SVG画像切り抜き
+    ID=クリップパスの「id」をSVG属性取得。
+    svgの「clip-path」に「url(#{ID})」をSVG属性設定。
+ここまで。
+#-----------------------------------------------
+＃＃マスキング
+# マスクを定義しておく所。白色で描画した所は表示され、黒色または透明度０で描画した所は非表示になる。白色に透明度を設定すれば、半透明にもできる。
+# 基本、定義領域(defs)に作成する。
+●(定義領域へ|定義領域に)SVGマスク作成
+    もし、定義領域＝空ならば、定義領域＝DOM親要素。
+    EL＝「mask」のSVGエレメント作成。
+    定義領域へELをDOM子要素追加。
+    ELを戻す。
+ここまで。
+
+●(svgをマスクで)SVG画像マスキング
+    ID=マスクの「id」をSVG属性取得。
+    svgの「mask」に「url(#{ID})」をSVG属性設定。
+ここまで。
+
+＃＃グラデーション
+# 基本、定義領域(defs)に作成する。
+/*
+stop配列は[[offset,stop-color,stop-opacity],[...]]の配列。
+・x1,y1：勾配ベクトルの始点
+・x2,y2：勾配ベクトルの終点
+*/
+●(stop配列で始点から終点まで定義領域へ|定義領域に終点の)SVG線形グラデーション作成
+    もし、定義領域＝空ならば、定義領域＝DOM親要素。
+    x1,y1＝始点。x2,y2＝終点。
+　　EL＝「linearGradient」のSVGエレメント作成。
+　　定義領域へELをDOM子要素追加。
+　　ELへ{"x1":x1,"y1":y1,"x2":x2,"y2":y2}をSVG属性一括設定。
+　　stop配列を反復
+　　　　stop＝「stop」のSVGエレメント作成。
+　　　　stopの「offset」に対象[0]をSVG属性設定。
+　　　　stopの「stop-color」に対象[1]をSVG属性設定。
+　　　　もし、対象[2]≠未定義ならば、stopの「stop-opacity」に対象[2]をSVG属性設定。
+　　　　ELへstopをDOM子要素追加。
+　　ここまで。
+    ELを戻す。
+ここまで。
+
+/*
+中点は[cx,cy]または[cx,cy,fx,fy]の配列。
+・cx,cy：中点
+・fx,fy：焦点
+・r：半径
+*/
+●(stop配列で中点から半径まで定義領域へ|定義領域に半径の)SVG放射状グラデーション作成
+    もし、定義領域＝空ならば、定義領域＝DOM親要素。
+    cx,cy,fx,fy＝中点。
+    設定＝{"cx":cx,"cy":cy,"fx":fx,"fy":fy,"r":半径}
+    もし、fx＝未定義ならば、設定＝{"cx":cx,"cy":cy,"r":半径}
+　　EL＝「radialGradient」のSVGエレメント作成。
+　　定義領域へELをDOM子要素追加。
+　　ELへ設定をSVG属性一括設定。
+　　stop配列を反復
+　　　　stop＝「stop」のSVGエレメント作成。
+　　　　stopの「offset」に対象[0]をSVG属性設定。
+　　　　stopの「stop-color」に対象[1]をSVG属性設定。
+　　　　もし、対象[2]≠未定義ならば、stopの「stop-opacity」に対象[2]をSVG属性設定。
+　　　　ELへstopをDOM子要素追加。
+　　ここまで。
+    ELを戻す。
+ここまで。
+
+●(svgの属性に|属性へグラデーションを)SVGグラデーション設定
+    ID＝グラデーションの「id」をSVG属性取得。
+    svgの属性に「url(#{ID})」をSVG属性設定。
+ここまで。
+#-----------------------------------------------
+＃＃タイルパターン
+# 基本、定義領域(defs)に作成する。
+●(whで定義領域へ|定義領域に)SVGタイルパターン作成。
+    もし、定義領域＝空ならば、定義領域＝DOM親要素。
+    変数 [幅,高さ]＝wh。
+    EL＝「pattern」のSVGエレメント作成。
+    ELの「幅」に幅をSVG属性設定。
+    ELの「高さ」に高さをSVG属性設定。
+    # 適用先のサイズがどうでも、パターンのサイズ、比率は変えたくない。
+    ELの「patternUnits」に「userSpaceOnUse」をSVG属性設定。
+    ELの「patternContentUnits」に「userSpaceOnUse」をSVG属性設定。
+    # 適用先の画像に対する比率で位置やサイズを設定する場合の設定。
+    //ELの「patternUnits」に「objectBoundingBox」をSVG属性設定。
+    //ELの「patternContentUnits」に「objectBoundingBox」をSVG属性設定。
+    定義領域へELをDOM子要素追加。
+    ELを戻す。
+ここまで。
+
+●(svgの属性に|属性へタイルパターンを)SVGタイルパターン設定
+    ID=タイルパターンの「id」をSVG属性取得。
+    # 適用先の画像の0,0からパターンが始まるようにする。
+    タイルパターンの「x」に0をSVG属性設定。
+    タイルパターンの「y」に0をSVG属性設定。
+    svgの属性に「url(#{ID})」をSVG属性設定。
+ここまで。
+#-----------------------------------------------
+＃フィルター
+# 基本、定義領域(defs)に作成する。
+●(定義領域へ|定義領域に)SVGフィルター作成
+    もし、定義領域＝空ならば、定義領域＝DOM親要素。
+    EL＝「filter」のSVGエレメント作成。
+    ELの「filterUnits」に「userSpaceOnUse」をSVG属性設定。
+    定義領域へELをDOM子要素追加。
+    SVG対象フィルター＝EL。
+    ELを戻す。
+ここまで。
+
+●(ELをフィルターへ|フィルターに)SVGフィルター追加
+    もし、フィルター＝空ならば、フィルター＝SVG対象フィルター。
+    もし、SVG対象フィルター＝空ならば、「先にフィルター作成」とコンソール表示。
+    re＝ELの「id」をSVG属性取得。
+    ELの「result」にreをSVG属性設定。
+    フィルターへELをDOM子要素追加。
+    reを戻す。
+ここまで。
+
+●(svgへ|svgにフィルターを)SVGフィルター設定
+    もし、フィルター＝空ならば、フィルター＝SVG対象フィルター。
+    もし、SVG対象フィルター＝空ならば、「先にフィルター作成」とコンソール表示。
+    ID＝フィルターの「id」をSVG属性取得。
+    svgの「filter」に「url(#{ID})」をSVG属性設定。
+ここまで。
+
+●(svgにフィルターで|フィルターにてsvgへELを)SVGフィルター直接設定
+    もし、フィルター＝空ならば、フィルター＝SVG対象フィルター。
+    もし、SVG対象フィルター＝空ならば、「先にフィルター作成」とコンソール表示。
+    re＝フィルターにELをSVGフィルター追加。
+    svgへフィルターをSVGフィルター設定。
+    reを戻す。
+ここまで。
+
+＃＃画像処理フィルター
+#ピクセルは偶数にしたほうがいいです。
+●(ピクセルでsvgに|svgへ)SVG画像モザイク
+    前画像＝SVGフィルター前画像取得。
+    # ドットの作成
+    黒色でSVG画像塗り潰し。
+    それのDOM要素ID取得して{「x」: ピクセル/2,「y」:ピクセル/2,「幅」:1,「高さ」:1}をSVG属性一括設定。
+    ドット＝[0,0]にSVG画像ズラし。
+    それのDOM要素ID取得して{「x」: 0,「y」:0,「幅」:ピクセル,「高さ」:ピクセル}をSVG属性一括設定。
+    ドットs＝ドットをSVG画像敷き詰め。
+    # 元画像を合成
+    前画像とドットsを「in」でSVG画像合成。
+    # ドットをピクセルに拡張
+    ピクセル/2でSVG画像膨張。
+    svgにSVG対象フィルターをSVGフィルター設定。
+ここまで。
+
+●(強度でsvgへ|svgに強度の)SVG画像ボカシ　# feGaussianBlur
+    EL＝「feGaussianBlur」のSVGエレメント作成。
+    ELの「stdDeviation」に強度をSVG属性設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+# 強度は（1〜20）。
+●(強度でsvgへ|svgに強度の)SVG画像シャープ
+    シャープ＝{「order」: 3,「targetX」: 1,「targetY」: 1,
+               「kernelMatrix」:「0 -1 0 -1 {25-強度} -1 0 -1 0」}
+    シャープでsvgをSVG行列畳み込み。
+ここまで。
+
+●(svgを)SVG画像ネガポジ
+    ネガポジ＝{"type": ["linear","linear","linear",""],
+               "slope": [-1,-1,-1,""],
+               "intercept": [1,1,1,""]}
+    svgをネガポジでSVG色成分変換。
+ここまで。
+
+●(Aでsvgを)SVG画像モノクロ　# 二値化
+    0でSVG画像彩度補正。
+    二値化＝{"type": "linear", "slope": 255 ,"intercept": -1*A}
+    svgを二値化でSVG色成分変換。
+ここまで。
+
+//キャンバスのと同じ色味にするには0.45で逆ガンマ補正→実際の画像処理→2.2でガンマ補正。
+●(Aでsvgを)SVG画像ガンマ補正
+    ガンマ補正＝{"type": "gamma", "exponent": A}
+    svgをガンマ補正でSVG色成分変換。
+ここまで。
+
+●(Aでsvgを)SVG画像コントラスト
+    コントラスト＝{"type": "linear", "slope": A ,"intercept": -1*(0.5*A)+0.5}
+    svgをコントラストでSVG色成分変換。
+ここまで。
+
+●(Aでsvgを)SVG画像明度補正
+    明度＝{"type": "linear", "slope": A}
+    svgを明度でSVG色成分変換。
+ここまで。
+
+●(Aでsvgを)SVG画像ノイズ
+    前画像＝SVGフィルター前画像取得。
+    [0.8,1]のSVGフラクタルノイズ。
+    ノイズ＝{"type":["discrete","discrete","discrete","linear"], "tableValues":["0,1","0,1","0,1",""],"slope":["","","",255], "intercept":["","","",-200+A]}
+    ノイズでSVG色成分変換。
+    それと前画像を「soft-light」でSVG画像ブレンド。
+    svgにそれと前画像を「in」でSVG画像合成。
+ここまで
+
+●(svgを)SVG画像グレイスケール
+    svgを0でSVG画像彩度補正。
+ここまで。
+
+//セピアという名称ですが、グレイスケール化したものに特定の色でフィルタ掛ける感じ。
+//rgbは[R,G,B]または「#RRGGBB」。カラーネームや色定数は使えません。
+//「#EE9966」あたりがいい感じ？
+●(rgbでsvgを)SVG画像セピア
+    もし、（rgbの1だけ文字左部分）＝「#」ならば、rgb＝rgbのRGB分解。
+    ３回。rgb[回数-1]＝rgb[回数-1]/255。。。
+    r,g,b＝rgb。
+    値＝「{0.2126*r} {0.7152*r} {0.0722*r} 0 0
+          {0.2126*g} {0.7152*g} {0.0722*g} 0 0
+          {0.2126*b} {0.7152*b} {0.0722*b} 0 0
+           0 0 0 1 0」
+    svgを値にSVG色行列変換。
+ここまで。
+
+●(svgを|svgへ)SVG画像線画変換
+    1でSVG画像膨張。
+    それと「元画像」を「difference」でSVG画像ブレンド。
+    線画＝svgのSVG画像明度抽出。
+    線画＝{"type": "gamma", "amplitude": 1.1, "exponent": 0.6, "offset": -0.1}でSVG色成分変換。
+    背景＝白色でSVG画像塗り潰し。
+    svgで[背景,線画]をSVG画像マージ。
+ここまで。
+
+# エッジフィルタなんかいろいろある・・・
+変数 SVGエッジフィルター＝{
+     「種別」:[「ラプシアン4」,「ラプシアン8」,「ソーベルx」,「ソーベルy」,「ロバーツx」,「ロバーツy」,「プレヴィットx」,「プレヴィットy」],
+     「ラプシアン4」:"0 1 0 1 -4 1 0 1 0",//4近傍
+     「ラプシアン8」:"1 1 1 1 -8 1 1 1 1",//8近傍
+     「ソーベルx」:「-1 0 1 -2 0 2 -1 0 1」,
+     「ソーベルy」:「-1 -2 -1 0 0 0 1 2 1」,
+     「ロバーツx」:「0 0 0 0 1 0 0 0 -1」,
+     「ロバーツy」:「0 0 0 0 0 1 0 -1 0」,
+     「プレヴィットx」:「-1 0 1 -1 0 1 -1 0 1」,
+     「プレヴィットy」:「-1 -1 -1 0 0 0 1 1 1」
+}
+●(svgを|svgへAで)SVG画像エッジ変換
+    もし、A＝空ならば、A＝「ソーベルy」
+    もし((Aの変数型確認)＝「number」)ならば、A＝SVGエッジフィルター["種別"][A]
+    エッジ＝{「order」: 3, 「divisor」: 1,「preserveAlpha」:「true」}
+    エッジ["kernelMatrix"]＝SVGエッジフィルター[A]
+    エッジでsvgをSVG行列畳み込み。
+ここまで。
+
+＃＃＃画像セピアで使用
+●(色を|色の)RGB分解
+　分色とは変数。分色＝空配列。
+　色＝色の「#」を「0x」に置換。
+　色＝色を整数変換。
+　数を２から０まで繰り返す
+　　分色[数]＝色%256。
+　　色＝(色-分色[数])/256
+　ここまで。
+　分色で戻る。
+ここまで。
+
+＃＃＃前画像
+●SVGフィルター前画像取得
+    SVG対象フィルターのDOM末尾子要素取得。
+    もし、それがNULLでなければ、それの「result」をSVG属性取得して戻る。
+    違えば、「元画像」を戻す。
+ここまで。
+
+＃＃追加画像処理フィルター
+# 陰色は塗り色と塗り透明度を使用
+●(位置と強度でsvgに|svgへ位置の)SVGドロップシャドウ　# feDropShadow
+    EL＝「feDropShadow」のSVGエレメント作成。
+    変数 [dx,dy]＝位置。
+    もし、dy＝未定義ならば、dy＝dx。
+    ELに{「dx」:dx,「dy」:dy,「stdDeviation」:強度,
+         「flood-color」:SVG描画設定情報["塗"]["fill"],
+         「flood-opacity」:SVG描画設定情報["塗"]["fill-opacity"]}をSVG属性一括設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+●(svgを|svgへ)SVG画像エンボス変換
+    0でSVG画像彩度補正。
+    エンボス＝{「order」: 3, 「divisor」: 1,「preserveAlpha」:「true」,「bias」: 0.5,
+               「kernelMatrix」:"-5 0 0 0 5 0 0 0 0"}
+    エンボスでsvgをSVG行列畳み込み。
+ここまで。
+
+●(svgの|svgからAで)SVG画像輪郭抽出
+    もし、A＝空ならば、A＝「ラプシアン8」
+    もし((Aの変数型確認)＝「number」)ならば、A＝SVGエッジフィルター["種別"][A]
+    輪郭＝{「order」: 3, 「divisor」: 1,「preserveAlpha」:「true」,「bias」:1}
+    輪郭["kernelMatrix"]＝SVGエッジフィルター[A]
+    輪郭でsvgをSVG行列畳み込み。
+ここまで。
+
+●(色とサイズにsvgを|サイズで色の)SVG画像縁取り
+    前画像＝SVGフィルター前画像取得。
+    縁取り＝サイズでSVG画像膨張。
+    縁色＝色でSVG画像塗り潰し。
+    縁色と縁取りを「in」でSVG画像合成。
+    それと「元画像」を「out」でSVG画像合成。
+    svgで[前画像,それ]をSVG画像マージ。
+ここまで。
+
+●(強度で|強度にsvgを)SVG画像粒子拡散
+    前画像＝SVGフィルター前画像取得。
+    ノイズ＝0.8のSVGフラクタルノイズ。
+    「0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 1」でSVG色行列変換。
+    それと前画像を「soft-light」でSVG画像ブレンド。
+    それと前画像を「in」でSVG画像合成。
+    それとノイズを強度でsvgにSVG変位マップ。
+ここまで。
+
+＃＃基本フィルター
+# 透明度は塗り透明度を使用。
+●(色でsvgを)SVG画像塗り潰し　# feFlood
+    EL＝「feFlood」のSVGエレメント作成。
+    ELの「flood-color」に色をSVG属性設定。
+    もし、色＝空ならば、ELの「flood-color」にSVG描画設定情報["塗"]["fill"]をSVG属性設定。
+    ELの「flood-opacity」にSVG描画設定情報["塗"]["fill-opacity"]をSVG属性設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+●(位置にsvgを)SVG画像ズラし　# feOffset
+    変数 [dx,dy]＝位置。
+    EL＝「feOffset」のSVGエレメント作成。
+    ELの「dx」にdxをSVG属性設定。
+    ELの「dy」にdyをSVG属性設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+●(Aをsvgで|svgに)SVG画像敷き詰め　# feTile
+    もし、(DOM和スタイルにAが辞書キー存在）ならば、A＝DOM和スタイル[A]。
+    EL＝「feTile」のSVGエレメント作成。
+    ELの「in」にAをSVG属性設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+●(imgをsvgのxywhに|xywhへ)SVG画像挿入　# feImage
+    変数 [x,y,w,h]＝xywh。
+    EL＝「feImage」のSVGエレメント作成。
+    ELに{「href」:img,「x」:x,「y」:y,「width」:w,「height」:h}をSVG属性一括設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+＃＃＃色変換
+# 色の行列変換
+●(値で|値にsvgを)SVG色行列変換　# feColorMatrix
+    EL＝「feColorMatrix」のSVGエレメント作成。
+    ELの「type」に「matrix」をSVG属性設定。
+    ELの「values」に値をSVG属性設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+●(値でsvgを)SVG画像彩度補正
+    EL＝「feColorMatrix」のSVGエレメント作成。
+    ELの「type」に「saturate」をSVG属性設定。
+    ELの「values」に値をSVG属性設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+●(値でsvgを)SVG画像色相回転
+    EL＝「feColorMatrix」のSVGエレメント作成。
+    ELの「type」に「hueRotate」をSVG属性設定。
+    ELの「values」に値をSVG属性設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+●(svgの)SVG画像明度抽出
+    EL＝「feColorMatrix」のSVGエレメント作成。
+    ELの「type」に「luminanceToAlpha」をSVG属性設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+# 色の変換
+●(objでsvgを)SVG色成分変換　# feComponentTransfer,feFuncR,feFuncG,feFuncB,feFuncA
+    EL＝「feComponentTransfer」のSVGエレメント作成。
+    もし、svg＝空ならば、re＝SVG対象フィルターにELをSVGフィルター追加。
+    違えば、re＝SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+    # 省略があった場合objから設定を作る。
+    変数 設定＝空辞書。
+    objを反復
+        もし、((対象の変数型確認)!==「object」)ならば、
+            設定[対象キー]＝空配列。
+            4回。設定[対象キー][回数-1]＝対象。。。
+        違えば、
+            設定＝objを配列複製。
+        ここまで。
+    ここまで。
+    色=["R","G","B","A"]。各色EL＝空配列。
+    4回
+        C=回数-1。
+        もし、設定["type"][C]===空ならば、抜ける。
+        違えば、各色EL[C]＝「feFunc{色[C]}」のSVGエレメント作成。
+        設定を反復
+            値＝対象[C]
+            もし、値===空でなければ、各色EL[C]の対象キーに値をSVG属性設定。
+        ここまで。
+        ELへ各色EL[C]をDOM子要素追加。
+    ここまで。
+    reを戻す。
+ここまで。
+
+＃＃＃画像を合成
+# PorterDuff合成
+/*
+operator
+・over：inの画像優先。
+・in：inとin2の共通部分。
+・out：in2の部分をくり抜く。
+・atop：in2の領域にinの画像を重ねる。
+・xor：共通部分をくり抜く。
+・arithmetic：2つの画像の共通部分に応じた合成演算を行う。
+}
+*/
+●(AとBをoperatorでsvgに)SVG画像合成　# feComposite
+    もし、(DOM和スタイルにAが辞書キー存在）ならば、A＝DOM和スタイル[A]。
+    もし、(DOM和スタイルにBが辞書キー存在）ならば、B＝DOM和スタイル[B]。
+    EL＝「feComposite」のSVGエレメント作成。
+    ELに{「in」:A,「in2」:B,「operator」:operator}をSVG属性一括設定。
+    もし、operator＝「arithmetic」ならば、ELに{"k1":"0.5","k2":"0.5","k3":"0.5","k4":"0"}をSVG属性一括設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+# ブレンド
+/*
+mode
+・normal：通常
+・multiply：乗算
+・screen：スクリーン合成
+・darken：比較暗
+・lighten：比較明
+*/
+●(AとBをmodeでsvgに)SVG画像ブレンド　# feBlend
+    もし、(DOM和スタイルにAが辞書キー存在）ならば、A＝DOM和スタイル[A]。
+    もし、(DOM和スタイルにBが辞書キー存在）ならば、B＝DOM和スタイル[B]。
+    EL＝「feBlend」のSVGエレメント作成。
+    ELに{「in」:A,「in2」:B,「mode」:mode}をSVG属性一括設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+
+# 重ね合わせ
+//A配列に指定したものを順に重ねていく。
+●(Aをsvgで)SVG画像マージ　# feMerge,feMergeNode
+    EL＝「feMerge」のSVGエレメント作成。
+    もし、svg＝空ならば、re＝SVG対象フィルターにELをSVGフィルター追加。
+    違えば、re＝SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+    Aを反復
+        Node＝「feMergeNode」のSVGエレメント作成。
+        in＝対象。
+        もし、(DOM和スタイルに対象が辞書キー存在）ならば、in＝DOM和スタイル[対象]。
+        Nodeの「in」にinをSVG属性設定。
+        ELへNodeをDOM子要素追加。
+    ここまで。
+    reを戻す。
+ここまで。
+
+
+＃＃拡張フィルター
+●(objでsvgを|svgに)SVG行列畳み込み　# feConvolveMatrix
+    EL＝「feConvolveMatrix」のSVGエレメント作成。
+    ELにobjをSVG属性一括設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+//scale:ずらす幅
+●(AとBをscaleでsvgに)SVG変位マップ　# feDisplacementMap
+    EL＝「feDisplacementMap」のSVGエレメント作成。
+    ELに{「in」:A, 「in2」:B, 「scale」:scale,「xChannelSelector」:「R」}をSVG属性一括設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+＃＃＃画像の侵食・膨張
+# 暗い/値の小さい所が広がる
+# radiusは処理の半径。
+●(radiusでsvgを)SVG画像浸食
+    EL＝「feMorphology」のSVGエレメント作成。
+    ELの「operator」に「erode」をSVG属性設定。
+    ELの「radius」にradiusをSVG属性設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+# 明るい/値の大きい所が広がる
+●(radiusでsvgを)SVG画像膨張
+    EL＝「feMorphology」のSVGエレメント作成。
+    ELの「operator」に「dilate」をSVG属性設定。
+    ELの「radius」にradiusをSVG属性設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+＃＃＃パーリンノイズ
+/*
+強度は[baseFrequency,numOctaves]の配列。
+・baseFrequency：ノイズ関数の周波数(x y)。大きくなるほど細かくなる。1より小さい値を指定。
+・numOctaves：ノイズ関数に対するオクターブ。大きくなるほどより複雑になる。1以上の整数を指定。
+*/
+●(強度でsvgへ|svgに強度の)SVG乱気流
+    変数 [f,o]＝強度。もし、o＝未定義ならば、o＝1。
+    EL＝「feTurbulence」のSVGエレメント作成。
+    # 「stitch」継ぎ目をつなぐ。「noStitch」にするとつながない。
+    ELに{「type」:「turbulence」,「stitchTiles」:「stitch」,
+         「baseFrequency」:f,「numOctaves」:o}をSVG属性一括設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+●(強度でsvgへ|svgに強度の)SVGフラクタルノイズ
+    変数 [f,o]＝強度。もし、o＝未定義ならば、o＝1。
+    EL＝「feTurbulence」のSVGエレメント作成。
+    ELに{「type」:「fractalNoise」,「stitchTiles」:「stitch」,
+         「baseFrequency」:f,「numOctaves」:o}をSVG属性一括設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+＃＃＃照明効果と光源
+/*
+設定は[色,高さ,拡散]の配列。または、普通に一括設定。
+・lighting-color：光の色
+・surfaceScale：不透明度が1の部分の高さ
+・diffuseConstant：照明の拡散度合い
+*/
+●(設定でsvgへ|svgに色の)SVG照明効果
+    もし、(設定＝空)または(設定に「0」が辞書キー存在する)ならば、
+        オプションリスト＝["lighting-color","surfaceScale","diffuseConstant"]
+        設定からオプションリストで一括設定辞書作成して設定に代入。
+    ここまで。
+    EL＝「feDiffuseLighting」のSVGエレメント作成。
+    ELに設定をSVG属性一括設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+/*
+設定は[色,高さ,拡散,反射度]の配列。または普通に一括設定。
+・lighting-color：光の色
+・surfaceScale：不透明度が1の部分の高さ
+・diffuseConstant：照明の拡散度合い
+・specularExponent：照明の反射度合い(1～128)
+*/
+●(設定でsvgへ|svgに色の)SVG鏡面反射効果
+    もし、(設定＝空)または(設定に「0」が辞書キー存在する)ならば、
+        オプションリスト＝["lighting-color","surfaceScale","diffuseConstant","specularExponent"]
+        設定からオプションリストで一括設定辞書作成して設定に代入。
+    ここまで。
+    EL＝「feSpecularLighting」のSVGエレメント作成。
+    ELに設定をSVG属性一括設定。
+    もし、svg＝空ならば、SVG対象フィルターにELをSVGフィルター追加。
+    違えば、SVG対象フィルターでsvgにELをSVGフィルター直接設定。
+ここまで。
+
+＃＃＃＃光源
+/*
+方向角は[azimuth,elevation]の配列。
+・azimuth：光点の水平方向角。
+・elevation：光点の垂直方向角。
+*/
+●(照明フィルターに方向角の|照明フィルターへ方向角で)SVG平行光源設定
+    EL＝「feDistantLight」のSVGエレメント作成。
+    水平方向角,垂直方向角＝方向角。
+    ELに{「azimuth」:水平方向角,「elevation」:垂直方向角}をSVG属性一括設定。
+    照明フィルターのDOM要素ID取得にELをDOM子要素追加。
+ここまで。
+
+/*
+xyzは[x,y,z]の配列。
+・x：光源の横位置
+・y：光源の縦位置
+・z：光源の高さ
+*/
+●(照明フィルターにxyzの)SVG点光源設定
+    EL＝「fePointLight」のSVGエレメント作成。
+    x,y,z＝xyz。//光源の位置
+    ELに{「x」:x,「y」:y,「z」:z}をSVG属性一括設定。
+    照明フィルターのDOM要素ID取得にELをDOM子要素追加。
+ここまで。
+
+/*
+設定は[[x,y,z],[px,py,pz],[範囲角],[反射度]]の配列。または、普通に一括設定。
+・x,y,z：光源の位置
+・pointsAtX,pointsAtY,pointsAtZ：光の向き
+・limitingConeAngle：光が拡散する円錐の範囲角
+・specularExponent：光の反射度合い
+*/
+●(照明フィルターに設定の)SVGスポットライト設定
+    もし、(設定＝空)または(設定に「0」が辞書キー存在する)ならば、
+        x,y,z＝設定[0]。px,py,pz＝設定[1]。
+        設定配列＝[x,y,z,px,py,pz,設定[2],設定[3]]
+        オプションリスト＝["x","y","z","pointsAtX","pointsAtY","pointsAtZ","limitingConeAngle","specularExponent"]。
+
+        設定配列からオプションリストで一括設定辞書作成して設定に代入。
+    ここまで。
+    EL＝「feSpotLight」のSVGエレメント作成。
+    ELに設定をSVG属性一括設定。
+    照明フィルターのDOM要素ID取得にELをDOM子要素追加。
+ここまで。
+
+＃＃配列で設定して辞書型にする
+●(設定配列からオプションリストで)一括設定辞書作成
+    設定＝空辞書。C=0。
+    オプションリストを反復
+        もし、(設定配列[C]＝空)または(設定配列[C]＝未定義)でなければ、設定[対象]＝設定配列[C]。        C=C+1。
+    ここまで。
+    設定を戻す。
+ここまで。
+
+#-----------------------------------------------
+#-----------------------------------------------
+＃アニメーション
+#-----------------------------------------------
+/*
+・「attributeType」「XML」(全部属性で指定しているのでXML)
+・「repeatCount」「indefinite」（無限ループ。または0以上の数値）
+*/
+●(svgの属性へ|属性に時間とキーフレームで)SVGアニメーション設定
+    EL＝「animate」のSVGエレメント作成。
+    ELに{「attributeName」:属性,
+         「attributeType」:「XML」,「values」:キーフレーム,
+         「dur」:時間,「repeatCount」:「indefinite」}をSVG属性一括設定。
+    svgへELをDOM子要素追加。
+    ELを戻す。
+ここまで。
+
+●(svgの変形タイプに|変形タイプへ時間とキーフレームで)SVG変形アニメーション設定
+    EL＝「animateTransform」のSVGエレメント作成。
+    ELに{「attributeName」:「transform」,「type」:変形タイプ,
+         「attributeType」:「XML」,「values」:キーフレーム,
+         「dur」:時間,「repeatCount」:「indefinite」}をSVG属性一括設定。
+    svgへELをDOM子要素追加。
+    ELを戻す。
+ここまで。
+
+# 既存のパスを使う場合は、d属性を取得。
+●(svgを|svgに|svgへ時間とパスで)SVGモーションアニメーション設定
+    EL＝「animateMotion」のSVGエレメント作成。
+    ELに{「path」:パス,「dur」:時間,「repeatCount」:「indefinite」}をSVG属性一括設定。
+    svgへELをDOM子要素追加。
+    ELを戻す。
+ここまで。
+#-----------------------------------------------
+
+#-----------------------------------------------
+＃ダウンロード
+#-----------------------------------------------
+●(ファイル名でsvgを)SVGダウンロード
+    もし、ファイル名＝空ならば、ファイル名＝「nako3_SVG.svg」
+    SVGテキスト＝svg["outerHTML"]。
+    BLOB＝SVGテキストを{"type":"application/xml"}でBLOB作成。
+    URL＝「URL.createObjectURL」を[BLOB]でJS関数実行。
+    A＝「a」のDOM部品作成。# 仮のaタグ。
+    Aの「download」にファイル名をDOM属性設定。
+    Aの「href」にURLをDOM属性設定。
+    Aの「click」を空でJSメソッド実行。
+    DOM親要素からAをDOM子要素削除。# 消して終了。
+    「window.URL.revokeObjectURL」を[URL]でJS関数実行。# 解放して終了。
+ここまで。
+
+●(svgをファイル名で|ファイル名へ|ファイル名に)PNGダウンロード
+    もし、ファイル名＝空ならば、ファイル名＝「nako3_SVG.png」
+    SVGテキスト＝svg["outerHTML"]。
+    IMGデータ＝「"data:image/svg+xml;charset=utf-8;base64,"+btoa(unescape(encodeURIComponent('{SVGテキスト}')))」をJS実行。
+    w＝svgの「width」をSVG属性取得。
+    h＝svgの「height」をSVG属性取得。
+    [w,h]のキャンバス作成して描画開始。# 仮のキャンバス
+    A＝「a」のDOM部品作成。# 仮のaタグ
+    Aの「download」にファイル名をDOM属性設定。# ファイル名を仮設定。
+    IMGデータの画像読んだ時には、
+      [0,0]に対象を画像描画。# SVGのデータスキームを仮のキャンバスに描画。
+      A=「nadesi-dom-{DOM部品個数-1}」のDOM要素ID取得。
+      ファイル名＝Aの「download」をDOM属性取得。
+      Aに描画ダウンロードリンク作成。# 「download」が「canvas.png」に設定されてしまう。
+      Aの「download」にファイル名をDOM属性設定。# ファイル名を再設定。
+      Aの「click」を空でJSメソッド実行。
+      DOM親要素からAをDOM子要素削除。# 全部消して終了。
+      DOM親要素から描画中キャンバスをDOM子要素削除。
+    ここまで。
+ここまで。
+#-----------------------------------------------
+#-----------------------------------------------
+＃ドラッグ＆ドロップ
+#-----------------------------------------------
+# ドラッグ許可するのは、動かしたいSVGではなくその親要素。
+●(DOMで|DOMの|DOMを|DOMに)SVGドラッグ許可
+    DOMの「mousemove」に「SVGドラッグ移動処理」をDOMイベント追加。
+    DOMの「touchmove」に「SVGドラッグ移動処理」をDOMイベント追加。
+    DOMの「mouseup」に「SVGドラッグ終了処理」をDOMイベント追加。
+    DOMの「touchend」に「SVGドラッグ終了処理」をDOMイベント追加。
+ここまで。
+●(DOMで|DOMの|DOMを|DOMに)SVGドラッグ許可取消し
+    SVGドラッグ情報["移動中フラグ"]＝空。
+    SVGドラッグ情報["移動中要素"]＝空。
+    SVGドラッグ情報["変形既存値"]＝空。
+    DOMの「mousemove」から「SVGドラッグ移動処理」をDOMイベント削除。
+    DOMの「touchmove」から「SVGドラッグ移動処理」をDOMイベント削除。
+    DOMの「mouseup」から「SVGドラッグ終了処理」をDOMイベント削除。
+    DOMの「touchend」から「SVGドラッグ終了処理」をDOMイベント削除。
+ここまで。
+
+# 動かしたいSVG要素を個別にオンオフする
+●(SVGの|SVGを|SVGに)SVGドラッグオン
+    SVGの「mousedown」に「SVGドラッグ開始処理」をDOMイベント追加。
+    SVGの「touchstart」に「SVGドラッグ開始処理」をDOMイベント追加。
+ここまで。
+●(SVGの|SVGを|SVGに)SVGドラッグオフ
+    SVGの「mousedown」から「SVGドラッグ開始処理」をDOMイベント削除。
+    SVGの「touchstart」から「SVGドラッグ開始処理」をDOMイベント削除。
+ここまで。
+
+# 実際の処理
+●SVGドラッグ開始処理とは
+    対象イベントのDOMイベント処理停止。
+    SVGドラッグ情報["移動中フラグ"]＝オン。
+    SVGドラッグ情報["移動中要素"]＝対象イベント["currentTarget"]。
+    SVGドラッグ情報["変形既存値"]＝SVGドラッグ情報["移動中要素"]の「transform」をSVG属性取得。
+    もし、それ＝NULLならば、SVGドラッグ情報["変形既存値"]＝空。
+    もし、対象イベントに「changedTouches」が辞書キー存在するならば、
+        SVGドラッグ情報["元x"]＝対象イベント["changedTouches"][0]["pageX"]。
+        SVGドラッグ情報["元y"]＝対象イベント["changedTouches"][0]["pageY"]。
+    違えば、
+        SVGドラッグ情報["元x"]＝対象イベント["pageX"]。
+        SVGドラッグ情報["元y"]＝対象イベント["pageY"]。
+    ここまで。
+ここまで。
+
+●SVGドラッグ移動処理とは
+    もし、SVGドラッグ情報["移動中フラグ"]＝オンならば、
+        もし、対象イベントに「changedTouches」が辞書キー存在するならば、
+            今x＝対象イベント["changedTouches"][0]["pageX"]-SVGドラッグ情報["元x"]。
+            今y＝対象イベント["changedTouches"][0]["pageY"]-SVGドラッグ情報["元y"]。
+        違えば、
+            今x＝対象イベント["pageX"]-SVGドラッグ情報["元x"]。
+            今y＝対象イベント["pageY"]-SVGドラッグ情報["元y"]。
+        ここまで。
+        SVGドラッグ情報["移動中要素"]の「transform」に「translate({今x},{今y}) {SVGドラッグ情報["変形既存値"]}」をSVG属性設定。
+        SVGドラッグ情報["移動中要素"]のSVG変換マトリクス統合。
+    ここまで。
+ここまで。
+
+●SVGドラッグ終了処理とは
+    SVGドラッグ情報["移動中フラグ"]＝オフ。
+    SVGドラッグ情報["移動中要素"]＝空。
+ここまで。
+#-----------------------------------------------
+#-----------------------------------------------
+＃重なり設定
+#-----------------------------------------------
+# 記述した順に重なっていくので、最後に追加すると最前面になり、最初に挿入すると最背面となる。
+●(svgを)SVG最前面
+    親＝svgのDOM親要素取得。
+    svgを親にDOM子要素追加。
+ここまで。
+
+●(svgを)SVG最背面
+    親＝svgのDOM親要素取得。
+    最初＝親のDOM初子要素取得。
+    親の最初へsvgをDOM子要素挿入。
+ここまで。
+
+●(svgを要素の)SVG背面
+    親＝svgのDOM親要素取得。
+    もし、要素＝NULLならば、要素＝親のDOM初子要素取得。
+    親の要素へsvgをDOM子要素挿入。
+ここまで。
+
+●(svgを要素の)SVG前面
+    親＝svgのDOM親要素取得。
+    次要素＝要素のDOM次要素取得。
+    親の次要素へsvgをDOM子要素挿入。
+ここまで。
+
+＃＃DOMプラス
+●(DOMの)DOM親要素取得
+    DOM["parentNode"]で戻る。
+ここまで。
+
+//要素中の最初の子要素
+●(DOMの)DOM初子要素取得
+    DOM["firstChild"]で戻る。
+ここまで。
+//要素中の最後の子要素
+●(DOMの)DOM末尾子要素取得
+    DOM["lastChild"]で戻る。
+ここまで。
+
+//同じ階層の前の要素
+●(DOMの)DOM前要素取得
+    DOM["previousSibling"]で戻る。
+ここまで。
+//同じ階層の次の要素
+●(DOMの)DOM次要素取得
+    DOM["nextSibling"]で戻る。
+ここまで。
+
+●(親要素の参照先へ|参照先に子要素を)DOM子要素挿入
+    親要素の「insertBefore」を[子要素,参照先]でJSメソッド実行。
+ここまで。
+#-----------------------------------------------
