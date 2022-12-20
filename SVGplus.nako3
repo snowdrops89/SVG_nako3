@@ -736,6 +736,26 @@ xyzは[x,y,z]の配列。
         DOM親要素から仮をDOM子要素削除。
     ここまで。
 ここまで。
+
+# キャンバスへ描画して、SVGの方は消す。
+●(svgをxyへ|xyに)SVGキャンバス移動
+    svgの「hidden」にオンをSVG属性設定。
+    もし、xy＝空ならば、xy＝[0,0]。
+    SVGテキスト＝svg["outerHTML"]。
+    IMGデータ＝「"data:image/svg+xml;charset=utf-8;base64,"+btoa(unescape(encodeURIComponent('{SVGテキスト}')))」をJS実行。
+    svgの「id」に「移動元SVG」をDOM属性設定。
+    仮＝空のラベル作成。
+    仮の「xy」にxyをDOM属性設定。
+    IMGデータの画像読んだ時には、
+        svg＝「移動元SVG」のDOM要素ID取得。
+        親＝svgのDOM親要素取得。
+        仮＝「nadesi-dom-{DOM部品個数-1}」のDOM要素ID取得。
+        xy＝仮の「xy」をDOM属性取得。
+        x,y＝xy。
+        [x,y]に対象を画像描画。
+        親からsvgをDOM子要素削除。
+    ここまで。
+ここまで。
 #-----------------------------------------------
 #-----------------------------------------------
 ＃ドラッグ＆ドロップ
