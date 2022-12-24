@@ -5,7 +5,7 @@
 ！『https://snowdrops89.github.io/SVG_nako3/SVGplus.nako3』を取り込む。
 
 ＃母艦
-定数 母艦は、DOM親要素。
+変数 母艦は、DOM親要素。
 
 ＃原稿用紙親要素作成
 　DIV要素作成して原稿用紙親要素に代入。
